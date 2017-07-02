@@ -17,6 +17,16 @@ input[type=checkbox]
   -o-transform: scale(2); /* Opera */
   padding: 10px;
 }
+
+.hoverwa {
+   height: 10vh;
+   width: 10vw;
+   display: none;
+}
+
+span:hover + img{
+   display: block;
+}
 </style>
 
 </head>
@@ -38,16 +48,27 @@ input[type=checkbox]
 		<img src = "{{profile_image_url_large}}" style="margin-left: 18vw">
 						<div class="text-center" style=" font-size:160%"> {{username}} </div>
 		<button id="submit_skin_enable_button" class="btn btn-primary" style="margin-left: 19vw; margin-top: 2vh">Click to Submit skins</button>
+				<p>This is some text. <span>HOVER OVER ME</span>
+				  <img class="hoverwa" src="http://community.edgecast.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoor-mcjhjxszcdD4b08-3moSYg_jmPoTck29Y_cg_2bHHptrx2wXirUM4ZmHzctDAdwY6ZA2B_le3wLrmgZW86JTAyiEw6z5iuyhjDJJP-Q"/>
+				 
+				</p>
 
 
-			<form id="inventorylist" action="" class="container" style="margin-top: 2vh; display: none;">
+			<div id="inventorylist" action="" class="container" style="margin-top: 2vh; display: none;">
 			{% for item in tupleList %}
-			    <input type="checkbox" id="{{item.1}}"/> {{item.0}} <br />
+			    <input type="checkbox" value="{{item.1}}"/>
+			    	<p>
+			     		<span> 
+			     		{{item.0}} 
+			     		</span>
+			     		<img class="hoverwa" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}"/>
+			     	</p>
+			    <br>
 			   {% endfor %}
-			    <input type="submit" value="Submit" style="margin-left: 15vw">
-			</form>
+			    <button class="btn btn-primary" id="depositButton" style="margin-left: 15vw"> submit </button>
+			</div>
 
-
+			<input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
 
 
 
@@ -69,12 +90,78 @@ input[type=checkbox]
 
 </div>
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
 	$(function(){
-		$('#submit_skin_enable_button').click(function(){
+		
+	});
+
+	// SOCKET SENDING
+	$(document).ready(function(){
+
+      var socket = io.connect('http://localhost:3000/');
+      
+      socket.on('connect', function(){
+        console.log("connect");
+      });
+      
+      $('#submit_skin_enable_button').click(function(){
 			$('#inventorylist').show();
 		})
-	});
+		
+
+
+      // var entry_el = $('#comment');
+               
+      socket.on('message', function(message) {
+        //Escape HTML characters
+        var data = message.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        
+        //Append message to the bottom of the list
+        // $('#comments').append('<li>' + data + '</li>');
+         // window.scrollBy(0, 10000000000);
+        // entry_el.focus();
+        console.log("sent message: "+ data);
+      });
+
+
+      $('#depositButton').click(function(){
+			 var allVals = [];
+			 $('#inventorylist :checked').each(function(){
+		        allVals.push($(this).val());
+		    });
+		var msg = $('#steamid').val() + "," + allVals+"";
+		if(msg){
+			console.log("message sent");
+           socket.emit('send_message', msg, function(data){
+                console.log(data);
+           });
+       }
+
+		})
+
+
+
+
+                     
+      // entry_el.keypress(function(event){
+      //   //When enter is pressed send input value to node server
+      //   if(event.keyCode != 13) return;
+      //   var msg = entry_el.attr('value');
+      //   if(msg){
+      //      socket.emit('send_message', msg, function(data){
+      //           console.log(data);
+      //      });
+        
+      //   //Clear input value   
+      //   entry_el.attr('value', '');
+      //  }
+      // });
+    });
+
+
+
+
 </script>
 </body>
 </html>
