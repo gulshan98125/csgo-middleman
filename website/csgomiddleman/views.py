@@ -35,8 +35,8 @@ def node_api(request):
         #Create comment
         Comments.objects.create(user=user, text=request.POST.get('comment'))
         #Once comment has been created post it to the chat channel
-        r = redis.StrictRedis(host='localhost', port=6379, db=0)
-        r.publish('chat', user.username + ': ' + request.POST.get('comment'))
+        # r = redis.StrictRedis(host='localhost', port=6379, db=0)
+        # r.publish('chat', user.username + ': ' + request.POST.get('comment'))
         return HttpResponse("recieved trade from: "+user.username+"("+user_id+"), msg = "+ request.POST.get('comment'))
     else:
         return HttpResponse("error :(")

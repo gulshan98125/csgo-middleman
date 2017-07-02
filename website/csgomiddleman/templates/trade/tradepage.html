@@ -18,14 +18,38 @@ input[type=checkbox]
   padding: 10px;
 }
 
-.hoverwa {
-   height: 10vh;
-   width: 10vw;
-   display: none;
+.popupBox {
+	height: 20vh;
+	width: 15vw;
+    visibility:hidden;
+    opacity:0;        
+    transition:visibility 0s linear 0.3s,opacity 0.3s linear;
+    transition: all 0.4s ease;
+    transition-delay:  0.1s;
+
+}
+.popupHoverElement:hover > .popupBox {
+    visibility:visible;
+    opacity:1;
+    transition: all 0.3s ease;
+    transition-delay:  0s;        
+}       
+
+img {
+	max-width:100%;
+max-height:100%;
 }
 
-span:hover + img{
-   display: block;
+
+#two {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #DADADA;
+    color: #333333;
+    overflow:hidden;
+    left: 10vw;
+    line-height: 10px;
+    position: absolute;
+    top: 30px;
 }
 </style>
 
@@ -48,22 +72,15 @@ span:hover + img{
 		<img src = "{{profile_image_url_large}}" style="margin-left: 18vw">
 						<div class="text-center" style=" font-size:160%"> {{username}} </div>
 		<button id="submit_skin_enable_button" class="btn btn-primary" style="margin-left: 19vw; margin-top: 2vh">Click to Submit skins</button>
-				<p>This is some text. <span>HOVER OVER ME</span>
-				  <img class="hoverwa" src="http://community.edgecast.steamstatic.com/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpoor-mcjhjxszcdD4b08-3moSYg_jmPoTck29Y_cg_2bHHptrx2wXirUM4ZmHzctDAdwY6ZA2B_le3wLrmgZW86JTAyiEw6z5iuyhjDJJP-Q"/>
-				 
-				</p>
-
 
 			<div id="inventorylist" action="" class="container" style="margin-top: 2vh; display: none;">
 			{% for item in tupleList %}
-			    <input type="checkbox" value="{{item.1}}"/>
-			    	<p>
-			     		<span> 
-			     		{{item.0}} 
-			     		</span>
-			     		<img class="hoverwa" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}"/>
-			     	</p>
-			    <br>
+			    <input type="checkbox"  value="{{item.1}}"/>
+<div style="display:inline-block" class="popupHoverElement">
+    {{item.0}}
+
+    <div id="two" class="popupBox"> <img src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
+</div> <br>
 			   {% endfor %}
 			    <button class="btn btn-primary" id="depositButton" style="margin-left: 15vw"> submit </button>
 			</div>
@@ -83,7 +100,7 @@ span:hover + img{
 	</div>
 
 	<div class="row text-center" style="height: 10vh; background-color: green; font-size:300%; color:white">
-	Status: Waiting for submission from both.
+	<a style="color: white" id="status">Status: Waiting for submission from both. <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/> </a>
 	</div>
 
 
@@ -131,11 +148,13 @@ span:hover + img{
 		        allVals.push($(this).val());
 		    });
 		var msg = $('#steamid').val() + "," + allVals+"";
+		console.log(msg);
 		if(msg){
 			console.log("message sent");
            socket.emit('send_message', msg, function(data){
                 console.log(data);
            });
+       document.getElementById('status').text = "Trade Link sent";
        }
 
 		})
