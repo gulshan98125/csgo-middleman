@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+{% load static from staticfiles %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="row" style="height: 10vh; background-color: white;">
+	<div class="col-sm-6" style="font-size:200%;"> <a href ="https://steamcommunity.com/profiles/{{steamid}}"> Your steam profile <img src="{{profile_image_url_small}}"> </a> </div>
+	<div class="col-sm-2 col-sm-offset-4 text-center" style="font-size:200%;">
+	 <a href="#"> Website Profile  </a>
+	 </div>
+</div>
+<div class="text-center" style="font-size:250%; color:#DC143C"> Welcome! {{user}} <img src="{{profile_image_url_medium}}"> </div>
+<div class="row" style="height: 10vh; background-color: white;">
+
+</div>
+
+<div class="text-center" > 
+
+	<form class="form-inline" style="font-size:160%; color:#00008B">
+		YOU HAVE  &nbsp &nbsp &nbsp 
+		<select class="form-control" style="width:10%">
+			<option> Skins/keys</option>
+			<option> Paytm </option>
+		</select>
+	</form>
+	<br>
+	<!-- <form class="form-inline" style="font-size:160%; color:#8B008B">
+		YOU WANT  &nbsp &nbsp &nbsp
+		<select class="form-control" style="width:10%">
+			<option> Skins/keys</option>
+			<option> Paytm </option>
+		</select>
+	</form> -->
+	<br> <br><br>
+	<form action="{% url 'create_random_trade' %}">
+	<button type="submit" class="btn btn-primary">Click to generate link and proceed</button>
+	</form>
+
+	
+
+</div>
+
+</body>
+</html>

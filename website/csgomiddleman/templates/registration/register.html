@@ -1,0 +1,47 @@
+{% extends 'registration/base.html' %}
+
+{% load static from staticfiles %}
+
+{% block css %}
+	<link href="{% static 'css/register.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+	
+
+					<!-- Signup Form -->
+					<form class="form-horizontal text-center" action="{% url 'register' %}" method="post">
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="name" placeholder="Name" required>
+							<span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="username" placeholder="Username" required>
+							<span class="glyphicon glyphicon-user form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="email" placeholder="Email" required>
+							<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="phone_no" placeholder="Phone No" required>
+							<span class="glyphicon glyphicon-phone form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="beacon_id" placeholder="Beacon Id" required>
+							<span class="glyphicon glyphicon-hdd form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="password" name="password" placeholder="Password" required>
+							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+						</div>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="password" name="password2" placeholder="Confirm Password" required>
+							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+						</div>
+						{% csrf_token %}
+						<input class="btn btn-success" type="submit" value="SignUp">
+					</form>
+					
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'registration/base.html' %}
+
+{% load static from staticfiles %}
+
+{% block css %}
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+{% if form.errors %}
+						<h6 class="text-danger">
+							Your username/password didn't match.
+							Please try again.
+						</h6>
+					{% else %}
+						<h6>
+							<br><br>
+						</h6>
+					{% endif %}
+					<!-- Login Form -->
+
+<div class="col-md-4 col-md-4 col-sm-4 col-xs-12 col-xs-offset-4 right-background">
+
+					<form class="form-horizontal text-center" action="{% url 'login' %}" method="post">
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="text" name="username" placeholder="Username" required>
+							<span class="glyphicon glyphicon-user form-control-feedback"></span>
+						</div>
+						<br>
+						<div class="form-group has-success has-feedback">
+							<input class="form-control" type="password" name="password" placeholder="Password" required>
+							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+						</div>
+						<input type="hidden" name="next" value="{{ next }}" />
+						{% csrf_token %}
+						<br>
+						<input class="btn btn-primary" type="submit" value="Log In" style="margin-bottom: 5px"><br>
+						<a href="#" class="text-muted">Forgot your password?</a><br>
+					</form>
+
+</div>					
+
+					<br><br><br>
+					
+
+{% endblock %}

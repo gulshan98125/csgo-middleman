@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load static from staticfiles %}
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+	
+</head>
+<body>
+<div class="row" style="height: 10vh; background-color: white;">
+</div>
+
+<div class="text-center" style="font-size:250%; color:#DC143C"> Welcome! {{user}} </div>
+<div class="row" style="height: 10vh; background-color: white;"> </div>
+<div class="row" style="height: 10vh; background-color: white;"> </div>
+
+<div class="text-center" > Please login through steam to continue 
+<form action="{% url 'steamLogin' %}">
+	<input type="image" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Submit Form" />
+	</form>
+
+</div>
+
+</body>
+</html>
