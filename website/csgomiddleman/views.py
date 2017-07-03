@@ -68,18 +68,37 @@ def trade_page(request, randomString):
         profile_image_url_large = oj['avatarfull']
         profile_image_url_small = oj['avatar']
         profile_image_url_medium = oj['avatarmedium']
-    response2 = urllib2.urlopen('http://steamcommunity.com/profiles/'+steam64id+'/inventory/json/730/2')
+    response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
     data2 = json.loads(response2.read())
-    DictListofitems = data2['rgDescriptions']
+    DictListofitems = data2['descriptions']
     itemslist = []
     guns_icon_list = []
+    itemsToSkipList= []
+    counter = 0
     for guns in DictListofitems:
-        itemslist.append(DictListofitems[guns]['name'])
-        guns_icon_list.append(DictListofitems[guns]['icon_url'])
-    Dictidofitems = data2['rgInventory']
+        if guns['tradable']==1:
+            itemslist.append(guns['name'])
+            guns_icon_list.append(guns['icon_url'])
+            counter = counter + 1
+        else:
+            itemsToSkipList.append(counter)
+            counter = counter + 1
+    print ("itemstoSkipList: ")
+    print (itemsToSkipList)
+
+    Dictidofitems = data2['assets']
     idList =[]
     for itemsid in Dictidofitems:
-        idList.append(itemsid)
+        idList.append(itemsid['assetid'])
+
+    print ("length of Id list")
+    print (len(idList))
+
+    intToDecrease = 0;
+    for skip in itemsToSkipList:
+        idList.remove(idList[skip-intToDecrease])
+        intToDecrease = intToDecrease+1
+
     tupleList = list(zip(itemslist, idList, guns_icon_list))
     for (items,itemsid,guns) in tupleList:
         print ("")

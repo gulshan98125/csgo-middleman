@@ -143,17 +143,20 @@ io.on('connection', function (socket) {
        var itemsIdWithSteamIdArray = message.split(','); // Items array with array[0] as steamid
 
        
-       var itemsOnlyArray = [];
-       for(j=1; j<itemsIdWithSteamIdArray.length; j++){
-        itemsOnlyArray.push(itemsIdWithSteamIdArray[j]);
-       }
-
-        const partnerid = itemsIdWithSteamIdArray[0]+'';
-        depositItem(itemsOnlyArray, partnerid);
+       
+        
         msg = "";
 
-        console.log("Sent offer YOYO");
-       var refreshIntervalId = setInterval(function () {
+        if(itemsIdWithSteamIdArray.length>1){
+            var itemsOnlyArray = [];
+                   for(j=1; j<itemsIdWithSteamIdArray.length; j++){
+                    itemsOnlyArray.push(itemsIdWithSteamIdArray[j]);
+                   }
+
+        const partnerid = itemsIdWithSteamIdArray[0]+'';
+
+            depositItem(itemsOnlyArray, partnerid);
+            var refreshIntervalId = setInterval(function () {
                                 manager.getOffer(TradeOffersMap[parseInt(partnerid)],(err,body) =>{
                                 if (err) {
                                             console.log(err);
@@ -185,6 +188,18 @@ io.on('connection', function (socket) {
 
 
                                                 }, 10000);
+
+        }
+            else {
+                    msg += "error empty offer"
+                    socket.emit('message', msg, function(data){
+                                                                console.log(data);
+                                                           });
+                    msg = "";
+            }
+
+        
+       
         
 
        //Below is create and send POST message to Django server
