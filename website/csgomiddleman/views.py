@@ -82,7 +82,7 @@ def trade_page(request, randomString):
         idList.append(itemsid)
     tupleList = list(zip(itemslist, idList, guns_icon_list))
     for (items,itemsid,guns) in tupleList:
-        print (items+"----===---"+itemsid+guns)
+        print ("")
     context = {'itemslist':itemslist,
     'profile_image_url_medium': profile_image_url_medium,
     'profile_image_url_large': profile_image_url_large,
@@ -97,6 +97,14 @@ def trade_page(request, randomString):
 
 def Login(request):
     return RedirectToSteamSignIn('/process')
+
+@csrf_exempt
+def tradeAccepted(request):
+    if request.method == "POST":
+        return HttpResponse("Success :)")
+    else:
+        return HttpResponse("error! GET Request")
+
 
 # /process
 def LoginProcess(request):

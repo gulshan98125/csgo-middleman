@@ -87,7 +87,7 @@ max-height:100%;
 
 			<input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
 
-
+      <div class="text-center" style="font-size: 140%"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
 
 
 		</div>
@@ -100,7 +100,7 @@ max-height:100%;
 	</div>
 
 	<div class="row text-center" style="height: 10vh; background-color: green; font-size:300%; color:white">
-	<a style="color: white" id="status">Status: Waiting for submission from both. <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/> </a>
+	<a style="color: white" id="full_status">Status: Waiting for submission from both.  </a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
 	</div>
 
 
@@ -138,7 +138,10 @@ max-height:100%;
         // $('#comments').append('<li>' + data + '</li>');
          // window.scrollBy(0, 10000000000);
         // entry_el.focus();
-        console.log("sent message: "+ data);
+       document.getElementById('status').text = data;
+       $('#image').hide();
+       if(data == "trade Accepted!"){
+       document.getElementById('full_status').text = "skins submitted! waiting for money";}
       });
 
 
@@ -154,7 +157,10 @@ max-height:100%;
            socket.emit('send_message', msg, function(data){
                 console.log(data);
            });
-       document.getElementById('status').text = "Trade Link sent";
+           $('#image').attr("src","https://media.giphy.com/media/3oKIPjbXj8FIL6eG3e/giphy.gif");
+       document.getElementById('status').text = 'Trade Offer sent waiting';
+            $('#image').show();
+
        }
 
 		})

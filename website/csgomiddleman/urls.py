@@ -15,5 +15,6 @@ url(r'^create_random_trade/$', views.create_random_trade, name='create_random_tr
 url(r'^trade_page/(?P<randomString>[a-z A-Z 0-9]+)$', views.trade_page, name='trade_page'),
 url(r'^steamlogin/$', views.Login, name='steamLogin'),
 url(r'^process', views.LoginProcess, name='login_process'),
+url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
 
 ]

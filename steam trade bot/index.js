@@ -13,13 +13,12 @@ var io = require('socket.io')(http);
 var cookie_reader = require('cookie');
 var cookieParser = require('cookie-parser');
 var querystring = require('querystring');
+
+var TradeOffersMap = {};  
+
+
  
-// var redis = require('redis');
-// var sub = redis.createClient();
-
-
-
-
+ // STEAM BOT
 const manager = new TradeOfferManager({
     steam: client,
     community: community,
@@ -77,6 +76,9 @@ function depositItem(itemsArray, partnerid) {
                         if (err) {
                             console.log(err);
                         } else {
+                            TradeOffersMap[parseInt(partnerid)] = offer.id;
+                           
+                            
                             console.log(`Sent offer. Status: ${status}.`);
                         }
                     });
@@ -118,15 +120,7 @@ manager.on('newOffer', (offer) => {
 
 
 
-
-
-
-
-
-
-
-
-
+// SOCKETS
 
 io.use(function(socket,accept){
     var data = socket.request;
@@ -140,12 +134,7 @@ io.use(function(socket,accept){
 
 io.on('connection', function (socket) {
     console.log('\ngot a new connection from: ' + socket.id + '\n');
-    
-    //Grab message from Redis and send to client
-    // sub.on('message', function(channel, message){
-    //     socket.send(message);
-    // });
-    
+
     //Client is sending message through socket.io
     socket.on('send_message', function (message) {
 
@@ -161,9 +150,47 @@ io.on('connection', function (socket) {
 
         const partnerid = itemsIdWithSteamIdArray[0]+'';
         depositItem(itemsOnlyArray, partnerid);
+        msg = "";
+
+        console.log("Sent offer YOYO");
+       var refreshIntervalId = setInterval(function () {
+                                manager.getOffer(TradeOffersMap[parseInt(partnerid)],(err,body) =>{
+                                if (err) {
+                                            console.log(err);
+                                        } 
+                                        else
+                                        {
+                                            if(body.state==7){
+                                                console.log("Offer declined");
+                                                msg += "trade declined please try again :("
+                                                socket.emit('message', msg, function(data){
+                                                                console.log(data);
+                                                           });
+                                                msg = "";
+                                                clearInterval(refreshIntervalId);
+                                            }
+                                            else if (body.state==3){
+                                                console.log("Offer accepted");
+                                                msg += "trade Accepted!"
+                                                socket.emit('message', msg, function(data){
+                                                                console.log(data);
+                                                           });
+                                                msg = "";
+                                                clearInterval(refreshIntervalId);
+                                            }
+                                            else {console.log("waiting for offer accept");}
+                                            
+                                        }  
+                                        });                                                    
+
+
+                                                }, 10000);
         
 
        //Below is create and send POST message to Django server
+
+       
+       
 
          form = {
             'comment': message,
@@ -171,7 +198,7 @@ io.on('connection', function (socket) {
         }
 
         var options = {
-            uri : 'http://localhost:4000/node_api',
+            uri : 'http://localhost:4000/tradeAccepted/',
             method : 'POST',
             form : form
         }
@@ -182,7 +209,7 @@ io.on('connection', function (socket) {
             
 
               if (!error && response.statusCode == 200) {
-                console.log(body);
+                // console.log(body);
               }
               else {console.log("error");}
             })
