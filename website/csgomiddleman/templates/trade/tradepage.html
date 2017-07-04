@@ -100,6 +100,7 @@ max-height:100%;
 			</div>
 
 			<input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
+      <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
 
       <div class="text-center" style="font-size: 1.6vw"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
 
@@ -108,13 +109,13 @@ max-height:100%;
 		<div class="col-xs-6" style="height: 100%; 	background-color: 	#4B0082;">
 
 		
-		<div class="text-center" style="margin-top: 30vh; font-size: 1.3vw"> waiting for other user... </div>
+		<div class="text-center" id="postResponse" style="margin-top: 30vh; font-size: 1.3vw"> waiting for other user... </div>
 
 		</div>
 	</div>
 
 	<div class="row text-center" style="height: 10vh; background-color: green; font-size:3vw; color:white">
-	<a style="color: white" id="full_status">Status: Waiting for submission from both.  </a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
+	<a style="color: white" id="full_status"></a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
 	</div>
 
 
@@ -123,9 +124,7 @@ max-height:100%;
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
-	$(function(){
-		
-	});
+	
   function selectAll() {
   checkboxes = document.getElementsByName('foo');
   for(var i=0, n=checkboxes.length;i<n;i++) {
@@ -215,6 +214,36 @@ function unselectAll() {
       //   entry_el.attr('value', '');
       //  }
       // });
+    var refreshIntervalId = setInterval(function () {
+        console.log($('#randomString').val());
+        form = {
+            'randomString': $('#randomString').val()
+        }
+             $.post("http://localhost:4000/isUser2connected/", form, function(result){
+                  
+                  if(result=="user connected"){
+                    $("#postResponse").html(result);
+                    alert("User 2 connected");
+                    clearInterval(refreshIntervalId);
+                  }
+              });
+
+
+      },5000);
+
+
+    var refreshIntervalId2 = setInterval(function () {
+        form = {
+            'randomString': $('#randomString').val()
+        }
+             $.post("http://localhost:4000/tradeStatus/", form, function(result){
+                    $("#full_status").text(result)
+                  
+              });
+
+
+      },7000);
+
     });
 
 

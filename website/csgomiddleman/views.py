@@ -52,7 +52,7 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user,trade_status="active", random_string=randomString, created_by=request.user)
+    trade.objects.create(user_giving_skins=request.user,trade_status="nothing submitted", random_string=randomString, created_by=request.user)
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
@@ -74,20 +74,8 @@ def trade_page(request, rString):
         response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
         data2 = json.loads(response2.read())
         DictListofitems = data2['descriptions']
-        itemslist = []
         guns_icon_list = []
         itemsToSkipList= []
-        counter = 0
-        for guns in DictListofitems:
-            if guns['tradable']==1:
-                itemslist.append(guns['name'])
-                guns_icon_list.append(guns['icon_url'])
-                counter = counter + 1
-            else:
-                itemsToSkipList.append(counter)
-                counter = counter + 1
-        print ("itemstoSkipList: ")
-        print (itemsToSkipList)
         itemslistNew = []
         new_guns_icon_list = []
 
@@ -96,26 +84,19 @@ def trade_page(request, rString):
         for item in Dictidofitems:
             classid = item['classid']
             instanceid = item['instanceid']
-            idList.append(item['assetid'])
+            
             for description in DictListofitems:
                 if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
                     itemslistNew.append(description['name'])
                     new_guns_icon_list.append(description['icon_url'])
+                    idList.append(item['assetid'])
                     break
 
         print ("length of Id list")
         print (len(idList))
 
-        intToDecrease = 0;
-        for skip in itemsToSkipList:
-            idList.remove(idList[skip-intToDecrease])
-            intToDecrease = intToDecrease+1
-
         tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
-        for (items,itemsid,guns) in tupleList:
-            print ("")
-        context = {'itemslist':itemslist,
-        'profile_image_url_medium': profile_image_url_medium,
+        context = {'profile_image_url_medium': profile_image_url_medium,
         'profile_image_url_large': profile_image_url_large,
         'profile_image_url_small': profile_image_url_small,
         'randomString': rString,
@@ -126,11 +107,36 @@ def trade_page(request, rString):
         }
         return render(request, 'trade/tradepage.html', context)
     else:
-        return HttpResponse("Who are you?");
+        tradeObject.user_giving_money = request.user
+        tradeObject.save()
+        return render(request, 'trade/user2.html')
 
 @login_required
 def Login(request):
     return RedirectToSteamSignIn('/process')
+
+@login_required
+@csrf_exempt
+def tradeStatus(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.trade_status)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+
+
+@csrf_exempt
+@login_required
+def isUser2connected(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_money is None:
+            return HttpResponse('error')
+        else:
+            return HttpResponse('user connected')
+    else:
+        return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
 def tradeAccepted(request):

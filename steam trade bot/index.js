@@ -63,7 +63,6 @@ function depositItem(itemsArray, partnerid) {
                      
                     const item = theirInv.find((item) => item.assetid ==''+itemsArray[i]);
                     console.log("got item number" + i);
-                    console.log("added item: "+item);
                     offer.addTheirItem(item);    
                     
                     }
@@ -166,7 +165,6 @@ io.on('connection', function (socket) {
                                         {
                                             if(body.state==7){
                                                 console.log("Offer declined, Offer id: "+ ActiveTradeOffersMap[parseInt(partnerid)]);
-                                                console.log(body);
 
                                                 delete ActiveTradeOffersMap[parseInt(partnerid)];
 

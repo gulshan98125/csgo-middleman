@@ -16,5 +16,6 @@ url(r'^trade_page/(?P<rString>[a-z A-Z 0-9]+)$', views.trade_page, name='trade_p
 url(r'^steamlogin/$', views.Login, name='steamLogin'),
 url(r'^process', views.LoginProcess, name='login_process'),
 url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
-
+url(r'^isUser2connected/$', views.isUser2connected, name='isUser2connected'),
+url(r'^tradeStatus/$', views.tradeStatus, name='tradeStatus'),
 ]

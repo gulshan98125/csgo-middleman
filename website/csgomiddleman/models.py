@@ -8,7 +8,7 @@ class trade(models.Model):
 	user_giving_skins = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='trades_skins', null=True, blank=True)
 	user_giving_money = models.ForeignKey(settings.AUTH_USER_MODEL, null=True , related_name='trades_money', blank=True)
 	trade_status = models.CharField(max_length=100)
-	#trade status= money submitted/trade submitted/both submitted
+	#trade status= money submitted/trade submitted/money & trade both submitted/nothing submitted
 	random_string = models.CharField(max_length=100, unique=True) 
 	created_by = models.CharField(max_length=100)
 
