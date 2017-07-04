@@ -53,67 +53,82 @@ def steam_login_dashboard(request):
 def create_random_trade(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
     trade.objects.create(user_giving_skins=request.user,trade_status="active", random_string=randomString, created_by=request.user)
-    return HttpResponseRedirect(reverse('trade_page', kwargs={'randomString':randomString}))
+    return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
-def trade_page(request, randomString):
-    Profile_user_object = Profile.objects.get(user=request.user)
-    steam64id = Profile_user_object.steam_id
-    response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-    data = json.load(response)
-    for jo in data:
-        object = data[jo]['players']
-    for oj in object:
-        username = oj['personaname']
-        profile_image_url_large = oj['avatarfull']
-        profile_image_url_small = oj['avatar']
-        profile_image_url_medium = oj['avatarmedium']
-    response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
-    data2 = json.loads(response2.read())
-    DictListofitems = data2['descriptions']
-    itemslist = []
-    guns_icon_list = []
-    itemsToSkipList= []
-    counter = 0
-    for guns in DictListofitems:
-        if guns['tradable']==1:
-            itemslist.append(guns['name'])
-            guns_icon_list.append(guns['icon_url'])
-            counter = counter + 1
-        else:
-            itemsToSkipList.append(counter)
-            counter = counter + 1
-    print ("itemstoSkipList: ")
-    print (itemsToSkipList)
+def trade_page(request, rString):
+    tradeObject = trade.objects.get(random_string=rString)
+    createdUser = tradeObject.created_by
+    if createdUser == request.user.username:
+        Profile_user_object = Profile.objects.get(user=request.user)
+        steam64id = Profile_user_object.steam_id
+        response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
+        data = json.load(response)
+        for jo in data:
+            object = data[jo]['players']
+        for oj in object:
+            username = oj['personaname']
+            profile_image_url_large = oj['avatarfull']
+            profile_image_url_small = oj['avatar']
+            profile_image_url_medium = oj['avatarmedium']
+        response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
+        data2 = json.loads(response2.read())
+        DictListofitems = data2['descriptions']
+        itemslist = []
+        guns_icon_list = []
+        itemsToSkipList= []
+        counter = 0
+        for guns in DictListofitems:
+            if guns['tradable']==1:
+                itemslist.append(guns['name'])
+                guns_icon_list.append(guns['icon_url'])
+                counter = counter + 1
+            else:
+                itemsToSkipList.append(counter)
+                counter = counter + 1
+        print ("itemstoSkipList: ")
+        print (itemsToSkipList)
+        itemslistNew = []
+        new_guns_icon_list = []
 
-    Dictidofitems = data2['assets']
-    idList =[]
-    for itemsid in Dictidofitems:
-        idList.append(itemsid['assetid'])
+        Dictidofitems = data2['assets']
+        idList =[]
+        for item in Dictidofitems:
+            classid = item['classid']
+            instanceid = item['instanceid']
+            idList.append(item['assetid'])
+            for description in DictListofitems:
+                if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
+                    itemslistNew.append(description['name'])
+                    new_guns_icon_list.append(description['icon_url'])
+                    break
 
-    print ("length of Id list")
-    print (len(idList))
+        print ("length of Id list")
+        print (len(idList))
 
-    intToDecrease = 0;
-    for skip in itemsToSkipList:
-        idList.remove(idList[skip-intToDecrease])
-        intToDecrease = intToDecrease+1
+        intToDecrease = 0;
+        for skip in itemsToSkipList:
+            idList.remove(idList[skip-intToDecrease])
+            intToDecrease = intToDecrease+1
 
-    tupleList = list(zip(itemslist, idList, guns_icon_list))
-    for (items,itemsid,guns) in tupleList:
-        print ("")
-    context = {'itemslist':itemslist,
-    'profile_image_url_medium': profile_image_url_medium,
-    'profile_image_url_large': profile_image_url_large,
-    'profile_image_url_small': profile_image_url_small,
-    'randomString': randomString,
-    'username': username,
-    'itemsidlist': idList,
-    'tupleList': tupleList,
-    'steamid': steam64id,
-    }
-    return render(request, 'trade/tradepage.html', context)
+        tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
+        for (items,itemsid,guns) in tupleList:
+            print ("")
+        context = {'itemslist':itemslist,
+        'profile_image_url_medium': profile_image_url_medium,
+        'profile_image_url_large': profile_image_url_large,
+        'profile_image_url_small': profile_image_url_small,
+        'randomString': rString,
+        'username': username,
+        'itemsidlist': idList,
+        'tupleList': tupleList,
+        'steamid': steam64id,
+        }
+        return render(request, 'trade/tradepage.html', context)
+    else:
+        return HttpResponse("Who are you?");
 
+@login_required
 def Login(request):
     return RedirectToSteamSignIn('/process')
 
@@ -125,14 +140,18 @@ def tradeAccepted(request):
         return HttpResponse("error! GET Request")
 
 
-# /process
+@login_required
 def LoginProcess(request):
     steamid = GetSteamID64(request.GET)
     if steamid == False:
         # login failed
-        return HttpResponseRedirect('/login_failed')
+        return HttpResponse("ERROR! Login failed")
     else:
         # login success
+        if Profile.objects.filter(user=request.user).exists():
+            print ("")
+        else:
+            Profile.objects.create(user = request.user,steam_id=steamid,phone_no ="")
         Profile_user_object = Profile.objects.get(user=request.user)
         Profile_user_object.steam_id = steamid
         Profile_user_object.save()

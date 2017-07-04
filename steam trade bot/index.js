@@ -14,7 +14,7 @@ var cookie_reader = require('cookie');
 var cookieParser = require('cookie-parser');
 var querystring = require('querystring');
 
-var TradeOffersMap = {};  
+var ActiveTradeOffersMap = {};  
 
 
  
@@ -76,10 +76,11 @@ function depositItem(itemsArray, partnerid) {
                         if (err) {
                             console.log(err);
                         } else {
-                            TradeOffersMap[parseInt(partnerid)] = offer.id;
+                            ActiveTradeOffersMap[parseInt(partnerid)] = offer.id;
                            
                             
                             console.log(`Sent offer. Status: ${status}.`);
+
                         }
                     });
                 }
@@ -157,15 +158,19 @@ io.on('connection', function (socket) {
 
             depositItem(itemsOnlyArray, partnerid);
             var refreshIntervalId = setInterval(function () {
-                                manager.getOffer(TradeOffersMap[parseInt(partnerid)],(err,body) =>{
+                                manager.getOffer(ActiveTradeOffersMap[parseInt(partnerid)],(err,body) =>{
                                 if (err) {
                                             console.log(err);
                                         } 
                                         else
                                         {
                                             if(body.state==7){
-                                                console.log("Offer declined");
-                                                msg += "trade declined please try again :("
+                                                console.log("Offer declined, Offer id: "+ ActiveTradeOffersMap[parseInt(partnerid)]);
+                                                console.log(body);
+
+                                                delete ActiveTradeOffersMap[parseInt(partnerid)];
+
+                                                msg += "trade declined"
                                                 socket.emit('message', msg, function(data){
                                                                 console.log(data);
                                                            });
@@ -173,8 +178,32 @@ io.on('connection', function (socket) {
                                                 clearInterval(refreshIntervalId);
                                             }
                                             else if (body.state==3){
-                                                console.log("Offer accepted");
+                                                console.log("Offer accepted,Offer id: "+ ActiveTradeOffersMap[parseInt(partnerid)]);
+                                            
+                                                body.getExchangeDetails(false,(err, status, tradeInitTime, recievedItems, sendItems) =>{
+                                                    if(err){
+                                                        
+                                                    }
+                                                    else {
+                                                        console.log("Recieved Items: ");
+                                                        //For every item in recievedItems do item.new_assetid
+                                                    }
+                                                });
+                                            
+
+                                            
+                                                delete ActiveTradeOffersMap[parseInt(partnerid)];
                                                 msg += "trade Accepted!"
+                                                socket.emit('message', msg, function(data){
+                                                                console.log(data);
+                                                           });
+                                                msg = "";
+                                                clearInterval(refreshIntervalId);
+                                            }
+                                            else if (body.state==6){
+                                                console.log("Offer cancelled");
+                                                delete ActiveTradeOffersMap[parseInt(partnerid)];
+                                                msg += "trade cancelled!"
                                                 socket.emit('message', msg, function(data){
                                                                 console.log(data);
                                                            });

@@ -9,14 +9,20 @@
 <style> 
 .container { border:2px solid #ccc; width:40vw; height: 24vh; overflow-y: scroll; }
 .container2 {width:13.5vw; height: 26vh; }
+.buttonContainer {width: 10vw; height: 3vh;}
+.formButtonfront {
+  width: 12.5vw;
+  height: 3vh // only for IE8
+  max-width: 20vw;
+ }
 input[type=checkbox]
 {
   /* Double-sized Checkboxes */
-  -ms-transform: scale(2); /* IE */
-  -moz-transform: scale(2); /* FF */
+  -ms-transform: scale(1.4); /* IE */
+  -moz-transform: scale(1.4); /* FF */
   -webkit-transform: scale(1.4); /* Safari and Chrome */
-  -o-transform: scale(2); /* Opera */
-  padding: 10px;
+  -o-transform: scale(1.4); /* Opera */
+  padding: 1px;
 }
 
 .popupBox {
@@ -35,6 +41,10 @@ input[type=checkbox]
     transition: all 0.3s ease;
     transition-delay:  0s;        
 }       
+
+.pointerChange {
+  cursor: pointer;
+}
 
 img {
 	max-width:100%;
@@ -72,16 +82,19 @@ max-height:100%;
 
 	<div class="container2 text-center" style="margin-left: 18vw">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style=" font-size:1.6vw"> {{username}} </div>
-		<button id="submit_skin_enable_button" class="btn btn-primary" style="margin-left: 19vw; margin-top: 2vh">Click to Submit skins</button>
+		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 19vw; margin-top: 2vh"><div style="font-size: 1vw"> Click to Submit skins</div> </button>
 
 			<div id="inventorylist" action="" class="container" style="margin-top: 2vh; display: none;">
+     <button onClick="selectAll()"> select all </button> <button onclick="unselectAll()"> Unselect all </button> <br>
 			{% for item in tupleList %}
-			    <input type="checkbox"  value="{{item.1}}"/>
-<div style="display:inline-block" class="popupHoverElement">
+			   <label> <input type="checkbox" name="foo" value="{{item.1}}"/>
+<div style="display:inline-block; font-size: 1vw" class="popupHoverElement pointerChange">
     {{item.0}}
 
     <div id="two" class="popupBox"> <img src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
-</div> <br>
+</div>
+</label>
+ <br>
 			   {% endfor %}
 			    <button class="btn btn-primary" id="depositButton" style="margin-left: 15vw"> submit </button>
 			</div>
@@ -113,7 +126,18 @@ max-height:100%;
 	$(function(){
 		
 	});
-
+  function selectAll() {
+  checkboxes = document.getElementsByName('foo');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = true;
+  }
+}
+function unselectAll() {
+  checkboxes = document.getElementsByName('foo');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = false;
+  }
+}
 	// SOCKET SENDING
 	$(document).ready(function(){
 
