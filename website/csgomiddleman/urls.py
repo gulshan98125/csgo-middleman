@@ -15,6 +15,7 @@ url(r'^create_random_trade/$', views.create_random_trade, name='create_random_tr
 url(r'^trade_page/(?P<rString>[a-z A-Z 0-9]+)$', views.trade_page, name='trade_page'),
 url(r'^steamlogin/$', views.Login, name='steamLogin'),
 url(r'^process', views.LoginProcess, name='login_process'),
+url(r'^submitSkins/$', views.submitSkins, name='submitSkins'),
 url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
 url(r'^isUser2connected/$', views.isUser2connected, name='isUser2connected'),
 url(r'^tradeStatus/$', views.tradeStatus, name='tradeStatus'),

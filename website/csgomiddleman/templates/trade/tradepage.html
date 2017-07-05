@@ -115,7 +115,7 @@ max-height:100%;
 	</div>
 
 	<div class="row text-center" style="height: 10vh; background-color: green; font-size:3vw; color:white">
-	<a style="color: white" id="full_status"></a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
+	Status: <a style="color: white" id="full_status">checking</a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
 	</div>
 
 
@@ -176,7 +176,7 @@ function unselectAll() {
 		    });
 
        if(allVals.length>0) {
-            var msg = $('#steamid').val() + "," + allVals+"";
+            var msg = $('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
        }
        else {
           var msg = $('#steamid').val();
@@ -221,9 +221,9 @@ function unselectAll() {
         }
              $.post("http://localhost:4000/isUser2connected/", form, function(result){
                   
-                  if(result=="user connected"){
+                  if(result!="error"){
                     $("#postResponse").html(result);
-                    alert("User 2 connected");
+                    alert(result);
                     clearInterval(refreshIntervalId);
                   }
               });

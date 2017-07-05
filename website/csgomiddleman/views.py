@@ -52,7 +52,7 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user,trade_status="nothing submitted", random_string=randomString, created_by=request.user)
+    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
@@ -115,16 +115,32 @@ def trade_page(request, rString):
 def Login(request):
     return RedirectToSteamSignIn('/process')
 
-@login_required
 @csrf_exempt
 def tradeStatus(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
-        return HttpResponse(tradeObject.trade_status)
+        if tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "false":
+            return HttpResponse("Nothing submitted")
+        elif tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "true":
+            return HttpResponse("Money submitted")
+        elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
+            return HttpResponse("Skins submitted")
+        else:
+            return HttpResponse("Skins and Money Both submitted")
     else:
         return HttpResponse("error requested method doesn't exist")
 
-
+@csrf_exempt
+def submitSkins(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        assets = request.POST.get('assetids')
+        tradeObject.skins_assetids = assets
+        tradeObject.skins_submitted = "true"
+        tradeObject.save()
+        return HttpResponse("success skins submitted!")
+    else:
+        return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
 @login_required
@@ -134,7 +150,7 @@ def isUser2connected(request):
         if tradeObject.user_giving_money is None:
             return HttpResponse('error')
         else:
-            return HttpResponse('user connected')
+            return HttpResponse("user "+tradeObject.user_giving_money.username+" connected")
     else:
         return HttpResponse("error requested method doesn't exist")
 
@@ -157,7 +173,7 @@ def LoginProcess(request):
         if Profile.objects.filter(user=request.user).exists():
             print ("")
         else:
-            Profile.objects.create(user = request.user,steam_id=steamid,phone_no ="")
+            Profile.objects.create(user = request.user,steam_id=steamid)
         Profile_user_object = Profile.objects.get(user=request.user)
         Profile_user_object.steam_id = steamid
         Profile_user_object.save()

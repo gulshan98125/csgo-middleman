@@ -140,20 +140,21 @@ io.on('connection', function (socket) {
 
        console.log("recieved message: "+ message);
 
-       var itemsIdWithSteamIdArray = message.split(','); // Items array with array[0] as steamid
+       var itemsId_WithSteamId_and_RandomString = message.split(','); // Items array with array[0] as steamid
 
        
        
         
         msg = "";
 
-        if(itemsIdWithSteamIdArray.length>1){
+        if(itemsId_WithSteamId_and_RandomString.length>2){
             var itemsOnlyArray = [];
-                   for(j=1; j<itemsIdWithSteamIdArray.length; j++){
-                    itemsOnlyArray.push(itemsIdWithSteamIdArray[j]);
+                   for(j=2; j<itemsId_WithSteamId_and_RandomString.length; j++){
+                    itemsOnlyArray.push(itemsId_WithSteamId_and_RandomString[j]);
                    }
 
-        const partnerid = itemsIdWithSteamIdArray[0]+'';
+        const partnerid = itemsId_WithSteamId_and_RandomString[1]+'';
+        const randomString = itemsId_WithSteamId_and_RandomString[0]+'';
 
             depositItem(itemsOnlyArray, partnerid);
             var refreshIntervalId = setInterval(function () {
@@ -182,8 +183,36 @@ io.on('connection', function (socket) {
                                                     if(err){
                                                         
                                                     }
-                                                    else {
-                                                        console.log("Recieved Items: ");
+                                                    else {// WHEN THE TRADE OFFER IS ACCEPTED
+                                                        
+                                                        assetids = "";
+                                                        for(i=0;i<recievedItems.length-1;i++){
+                                                            assetids += recievedItems[i]['new_assetid'] + ",";
+                                                            
+                                                        }
+                                                        assetids += recievedItems[recievedItems.length-1]['new_assetid'];
+                                                        
+                                                        
+
+                                                form = {
+                                                            'assetids': assetids,
+                                                            'randomString': randomString,
+                                                        }
+
+                                                    var options = {
+                                                            uri : 'http://localhost:4000/submitSkins/',
+                                                            method : 'POST',
+                                                            form : form
+                                                        }
+
+                                                       request(options, function (error, response, body) {
+            
+
+                                                              if (!error && response.statusCode == 200) {
+                                                                 console.log(body);
+                                                              }
+                                                              else {console.log("error");}
+                                                            })
                                                         //For every item in recievedItems do item.new_assetid
                                                     }
                                                 });
@@ -234,27 +263,7 @@ io.on('connection', function (socket) {
        
        
 
-         form = {
-            'comment': message,
-            'sessionid': socket.request.cookie['sessionid'],
-        }
-
-        var options = {
-            uri : 'http://localhost:4000/tradeAccepted/',
-            method : 'POST',
-            form : form
-        }
-        
-        
-
-        request(options, function (error, response, body) {
-            
-
-              if (!error && response.statusCode == 200) {
-                // console.log(body);
-              }
-              else {console.log("error");}
-            })
+         
     });
 });
 
