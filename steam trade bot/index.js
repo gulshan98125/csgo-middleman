@@ -40,6 +40,37 @@ client.on('loggedOn', () => {
     client.gamesPlayed(730);
 });
 
+function sendItems(itemsArray, partnerid) {
+    console.log("sending items back");
+    manager.loadInventory(730, 2, true, (err, inventory) => {
+        if (err) {
+            console.log(err);
+        } else {
+            const offer = manager.createOffer(partnerid);
+            for(i=0; i<itemsArray.length; i++){
+                     
+                    const item = inventory.find((item) => item.assetid ==''+itemsArray[i]);
+                    console.log("got item number" + i);
+                    offer.addMyItem(item);    
+                    
+                    }
+
+            offer.setMessage(`you got items back :)`);
+            offer.send((err, status) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(`Sent offer. Status: ${status}.`);
+                }
+            });
+        }
+    });
+}
+
+
+
+
+
 function depositItem(itemsArray, partnerid) {
     console.log("idtotrade: "+ partnerid);
     const partner = partnerid;
@@ -142,7 +173,7 @@ io.on('connection', function (socket) {
 
        var itemsId_WithSteamId_and_RandomString = message.split(','); // Items array with array[0] as steamid
 
-       
+       offer_accepted = "false";
        
         
         msg = "";
@@ -176,44 +207,53 @@ io.on('connection', function (socket) {
                                                 msg = "";
                                                 clearInterval(refreshIntervalId);
                                             }
-                                            else if (body.state==3){
-                                                console.log("Offer accepted,Offer id: "+ ActiveTradeOffersMap[parseInt(partnerid)]);
+                            else if (body.state==3){
+                                console.log("Offer accepted,Offer id: "+ ActiveTradeOffersMap[parseInt(partnerid)]);
+                            
+                                body.getExchangeDetails(false,(err, status, tradeInitTime, recievedItems, sendItems) =>{
+                                    if(err){
+                                        
+                                    }
+                                    else {// WHEN THE TRADE OFFER IS ACCEPTED
+                                        offer_accepted = "true";
+                                        
+                                        assetids = "";
+                                        for(i=0;i<recievedItems.length-1;i++){
+                                            assetids += recievedItems[i]['new_assetid'] + ",";
                                             
-                                                body.getExchangeDetails(false,(err, status, tradeInitTime, recievedItems, sendItems) =>{
-                                                    if(err){
-                                                        
-                                                    }
-                                                    else {// WHEN THE TRADE OFFER IS ACCEPTED
-                                                        
-                                                        assetids = "";
-                                                        for(i=0;i<recievedItems.length-1;i++){
-                                                            assetids += recievedItems[i]['new_assetid'] + ",";
-                                                            
-                                                        }
-                                                        assetids += recievedItems[recievedItems.length-1]['new_assetid'];
-                                                        
-                                                        
+                                        }
+                                        assetids += recievedItems[recievedItems.length-1]['new_assetid'];
+                                        
+                                        
 
-                                                form = {
-                                                            'assetids': assetids,
-                                                            'randomString': randomString,
-                                                        }
+                                form = {
+                                            'assetids': assetids,
+                                            'randomString': randomString,
+                                        }
 
-                                                    var options = {
-                                                            uri : 'http://localhost:4000/submitSkins/',
-                                                            method : 'POST',
-                                                            form : form
-                                                        }
+                                    var options = {
+                                            uri : 'http://localhost:4000/submitSkins/',
+                                            method : 'POST',
+                                            form : form
+                                        }
 
-                                                       request(options, function (error, response, body) {
-            
+                    // update skins_submitted field of trade object
+                                       request(options, function (error, response, body) {
 
-                                                              if (!error && response.statusCode == 200) {
-                                                                 console.log(body);
-                                                              }
-                                                              else {console.log("error");}
-                                                            })
+
+                                              if (!error && response.statusCode == 200) {
+                                                 console.log(body);
+                                              }
+                                              else {console.log("error");}
+                                            })
                                                         //For every item in recievedItems do item.new_assetid
+
+
+                                   
+
+
+
+//Trade offer accepted last bracket below
                                                     }
                                                 });
                                             
@@ -226,6 +266,74 @@ io.on('connection', function (socket) {
                                                            });
                                                 msg = "";
                                                 clearInterval(refreshIntervalId);
+
+
+
+ console.log("checking and updating offer");
+
+        var tradeRevertedUpdate_and_check = setInterval(function () {
+        //send POST MESSAGE every 5 seconds TO update trade_reverted field
+
+            form2 = {
+                        'randomString': randomString,
+                    }
+
+            var options2 = {
+                    uri : 'http://localhost:4000/updateTradeReverted/',
+                    method : 'POST',
+                    form : form2
+            }
+
+//SEND MESSAGE TO UPDATE TRADE_REVERTED
+           request(options2, function (error, response, body) {
+
+
+                  if (!error && response.statusCode == 200) {
+                     console.log(body);
+                  }
+                  else {console.log("error2");}
+                })
+
+           var options3 = {
+            uri : 'http://localhost:4000/isTradeReverted/',
+                    method : 'POST',
+                    form : form2
+           }
+
+//SEND MESSAGE TO GET STATUS OF TRADE_REVERTED
+           request(options3, function (error, response, body) {
+
+
+                  if (!error && response.statusCode == 200) {
+                     if(body=="false"){
+                        //do nothing
+                     }
+                     else if(body != "false"){
+                        //SEND BACK TRADE OFFER HERE RECEIVED BODY IS string of assetids
+                        var Array_of_assetids_received = body.split(',');
+                        sendItems(Array_of_assetids_received, partnerid);
+                        //END THE INTERVAL
+                        clearInterval(tradeRevertedUpdate_and_check);
+                        // NOTIFY USER THROUGH SOCKET
+                        socket.emit('message', "Trade has been sent back to you (time limit exceeded)", function(data){
+                                                                console.log(data);
+                                                           });
+                     }
+                  }
+                  else {console.log("error3");}
+                })
+
+    }, 3000);    
+
+
+
+
+
+
+
+
+
+
                                             }
                                             else if (body.state==6){
                                                 console.log("Offer cancelled");
@@ -254,6 +362,12 @@ io.on('connection', function (socket) {
                     msg = "";
             }
 
+if(offer_accepted=="true"){
+      console.log("lel");
+
+
+
+}
         
        
         

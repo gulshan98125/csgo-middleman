@@ -2,6 +2,8 @@ import urllib.request as urllib2
 import json
 import redis
 from django.shortcuts import render
+import datetime
+from django.utils.timezone import utc
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
@@ -52,8 +54,39 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0")
+    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false", time_posted=datetime.datetime.utcnow().replace(tzinfo=utc))
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
+
+@csrf_exempt
+def isTradeReverted(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.trade_reverted=="false":
+            return HttpResponse("false")
+        elif tradeObject.trade_reverted=="true":
+            return HttpResponse(tradeObject.skins_assetids)
+        else:
+            return HttpResponse("false")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
+def updateTradeReverted(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        postedTime = tradeObject.time_posted
+        timediff = datetime.datetime.utcnow().replace(tzinfo=utc) - postedTime
+        timediff_inSeconds = timediff.total_seconds()
+        if timediff_inSeconds > 600:
+            tradeObject.trade_reverted = "true"
+            tradeObject.skins_submitted = "0"
+            tradeObject.save()
+            return HttpResponse("success trade_reverted changed")
+        else:
+            return HttpResponse("no change made to trade_reverted")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 
 @login_required
 def trade_page(request, rString):
@@ -125,6 +158,8 @@ def tradeStatus(request):
             return HttpResponse("Money submitted")
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
             return HttpResponse("Skins submitted")
+        elif tradeObject.skins_submitted == "0":
+            return HttpResponse("Trade cancelled please create new")
         else:
             return HttpResponse("Skins and Money Both submitted")
     else:

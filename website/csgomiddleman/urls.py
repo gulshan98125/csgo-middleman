@@ -19,4 +19,6 @@ url(r'^submitSkins/$', views.submitSkins, name='submitSkins'),
 url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
 url(r'^isUser2connected/$', views.isUser2connected, name='isUser2connected'),
 url(r'^tradeStatus/$', views.tradeStatus, name='tradeStatus'),
+url(r'^isTradeReverted/$', views.isTradeReverted, name='isTradeReverted'),
+url(r'^updateTradeReverted/$', views.updateTradeReverted, name='updateTradeReverted'),
 ]

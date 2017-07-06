@@ -11,6 +11,11 @@ class trade(models.Model):
 	amount_submitted = models.CharField(max_length=50,null=True)
 	#trade status= money submitted/trade submitted/Complete sending respective items/nothing submitted
 	skins_submitted = models.CharField(max_length=10,null=True)
+	#money submitted is the amount of money submitted
+	trade_reverted = models.CharField(max_length=10,null=True)
+	time_posted = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+	money_reverted = models.CharField(max_length=10,null=True)
 	money_submitted = models.CharField(max_length=10,null=True)
 	random_string = models.CharField(max_length=100, unique=True) 
 	created_by = models.CharField(max_length=100)
