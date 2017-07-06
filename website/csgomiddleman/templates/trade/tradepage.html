@@ -82,7 +82,7 @@ max-height:100%;
 
 	<div class="container2 text-center" style="margin-left: 18vw">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style=" font-size:1.6vw"> {{username}} </div>
-		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 19vw; margin-top: 2vh"><div style="font-size: 1vw"> Click to Submit skins</div> </button>
+		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 19vw; margin-top: 2vh"><div style="font-size: 1vw"> show skins list</div> </button>
 
 			<div id="inventorylist" action="" class="container" style="margin-top: 2vh; display: none;">
      <button onClick="selectAll()"> select all </button> <button onclick="unselectAll()"> Unselect all </button> <br>
@@ -96,7 +96,7 @@ max-height:100%;
 </label>
  <br>
 			   {% endfor %}
-			    <button class="btn btn-primary" id="depositButton" style="margin-left: 15vw"> submit </button>
+			    <button class="btn btn-primary" id="depositButton" style="margin-left: 12vw"> Deposit selected skins </button>
 			</div>
 
 			<input type="hidden" name="steamid" id="steamid" value="{{steamid}}">

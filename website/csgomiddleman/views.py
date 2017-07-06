@@ -77,7 +77,7 @@ def updateTradeReverted(request):
         postedTime = tradeObject.time_posted
         timediff = datetime.datetime.utcnow().replace(tzinfo=utc) - postedTime
         timediff_inSeconds = timediff.total_seconds()
-        if timediff_inSeconds > 600:
+        if timediff_inSeconds > 600 and tradeObject.money_submitted=="false":
             tradeObject.trade_reverted = "true"
             tradeObject.skins_submitted = "0"
             tradeObject.save()

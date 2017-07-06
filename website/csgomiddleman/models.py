@@ -21,7 +21,7 @@ class trade(models.Model):
 	created_by = models.CharField(max_length=100)
 
 	def __str__(self):
-		return self.user_giving_skins + self.user_giving_money
+		return self.user_giving_skins.username
 
 class Profile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)
