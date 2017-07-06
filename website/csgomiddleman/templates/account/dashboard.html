@@ -5,25 +5,32 @@
 {% load static from staticfiles %}
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body>
-<div class="row" style="height: 10vh; background-color: white;">
-	<div class="col-sm-6" style="font-size:200%;"> <a href ="https://steamcommunity.com/profiles/{{steamid}}"> Your steam profile <img src="{{profile_image_url_small}}"> </a> </div>
-	<div class="col-sm-2 col-sm-offset-4 text-center" style="font-size:200%;">
-	 <a href="#"> Website Profile  </a>
+<body background="http://i.imgur.com/pQutOiJ.jpg" style="overflow-x: hidden;">
+<div class="row" style="height: 10vh">
+	<div class="col-sm-6" style="font-size:2vw"> <a target="_blank" href ="https://steamcommunity.com/profiles/{{steamid}}" style="color:yellow"> Your steam profile <img src="{{profile_image_url_small}}"> </a> </div>
+	<div class="col-sm-2 col-sm-offset-4 text-center" style="font-size:2vw;">
+	 <a href="#" style="color:yellow"> Website Profile  </a>
 	 </div>
 </div>
-<div class="text-center" style="font-size:250%; color:#DC143C"> Welcome! {{user}} <img src="{{profile_image_url_medium}}"> </div>
-<div class="row" style="height: 10vh; background-color: white;">
+<div class="row" style="height: 10vh">
+<div class="col-sm-2 col-sm-offset-10 text-center" style="font-size:2vw;">
+<a href="/logout/" style="color:yellow"> logout  </a>
+</div>
+
+ </div>
+
+<div class="text-center" style="font-size:2.5vw; color:#2AFF00"> Welcome! {{user}} <img src="{{profile_image_url_medium}}"> </div>
+<div class="row" style="height: 10vh">
 
 </div>
 
 <div class="text-center" > 
 
-	<form class="form-inline" style="font-size:160%; color:#00008B">
+	<form class="form-inline" style="font-size:1.6vw; color:yellow; margin-top: 10vh">
 		YOU HAVE  &nbsp &nbsp &nbsp 
-		<select class="form-control" style="width:10%">
-			<option> Skins/keys</option>
-			<option> Paytm </option>
+		<select id="selected" class="form-control" style="width:10%">
+			<option value="skins"> Skins/keys</option>
+			<option value="paytm"> Paytm </option>
 		</select>
 	</form>
 	<br>
@@ -35,13 +42,21 @@
 		</select>
 	</form> -->
 	<br> <br><br>
-	<form action="{% url 'create_random_trade' %}">
-	<button type="submit" class="btn btn-primary">Click to generate link and proceed</button>
-	</form>
+	
+	<button id="button" class="btn btn-primary">Click to generate link and proceed</button>
+	
 
 	
 
 </div>
+
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script>
+	$("#button").click(function(){
+		window.location = "/create_random_trade"+"_"+$("#selected").val()
+	})
+</script>
+
 
 </body>
 </html>

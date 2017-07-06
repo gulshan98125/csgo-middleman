@@ -5,18 +5,29 @@
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
 	
 </head>
-<body>
-<div class="row" style="height: 10vh; background-color: white;">
+<body style="overflow-x: hidden;" background="http://i.imgur.com/pQutOiJ.jpg">
+
+
+<div class="row">
+<div class="col-xs-3" style=" height: 100vh"> </div>
+
+<div class="col-xs-6">
+<div class="row" style="height: 10vh">
 </div>
+<div class="text-center" style="font-size:3vw; color:#DC143C"> Welcome! {{user}} </div>
+<div class="row" style="height: 10vh"> </div>
 
-<div class="text-center" style="font-size:250%; color:#DC143C"> Welcome! {{user}} </div>
-<div class="row" style="height: 10vh; background-color: white;"> </div>
-<div class="row" style="height: 10vh; background-color: white;"> </div>
+<div class="text-center" > 
+<div style="font-size: 2vw; color: yellow">Please login through steam to continue  </div>
+<div style="font-size: 2vw; color: yellow">Note: only 1 steam id can be linked to an account</div>
 
-<div class="text-center" > Please login through steam to continue 
-<form action="{% url 'steamLogin' %}">
+<form action="{% url 'steamLogin' %}" style="margin-top: 10vh">
 	<input type="image" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Submit Form" />
 	</form>
+
+</div>
+</div>
+<div class="col-xs-3" style=" height: 100vh"> </div>
 
 </div>
 

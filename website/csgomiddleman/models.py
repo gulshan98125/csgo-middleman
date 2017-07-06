@@ -21,7 +21,13 @@ class trade(models.Model):
 	created_by = models.CharField(max_length=100)
 
 	def __str__(self):
-		return self.user_giving_skins.username
+		if self.user_giving_skins is None:
+			string = "created by- "+ self.user_giving_money.username
+			return string
+		else:
+			string = "created by- "+ self.user_giving_skins.username
+			return string
+
 
 class Profile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)

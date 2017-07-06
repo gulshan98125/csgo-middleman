@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load static from staticfiles %}
+
+
+
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+<style> 
+.container { border:2px solid #ccc; width:40vw; height: 24vh; overflow-y: scroll; }
+.container2 {width:13.5vw; height: 26vh; }
+.buttonContainer {width: 10vw; height: 3vh;}
+.formButtonfront {
+  width: 12.5vw;
+  height: 3vh // only for IE8
+  max-width: 20vw;
+ }
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(1.4); /* IE */
+  -moz-transform: scale(1.4); /* FF */
+  -webkit-transform: scale(1.4); /* Safari and Chrome */
+  -o-transform: scale(1.4); /* Opera */
+  padding: 1px;
+}
+
+.popupBox {
+	height: 20vh;
+	width: 15vw;
+    visibility:hidden;
+    opacity:0;        
+    transition:visibility 0s linear 0.3s,opacity 0.3s linear;
+    transition: all 0.4s ease;
+    transition-delay:  0.1s;
+
+}
+.popupHoverElement:hover > .popupBox {
+    visibility:visible;
+    opacity:1;
+    transition: all 0.3s ease;
+    transition-delay:  0s;        
+}       
+
+.pointerChange {
+  cursor: pointer;
+}
+
+img {
+	max-width:100%;
+max-height:100%;
+}
+
+
+#two {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #DADADA;
+    color: #333333;
+    overflow:hidden;
+    left: 10vw;
+    line-height: 10px;
+    position: absolute;
+    top: 30px;
+}
+a {
+    text-decoration: none !important;
+}
+</style>
+
+</head>
+<body style="overflow-x: hidden;overflow-y: hidden">
+
+<div class="row" style="height: 5vh; background-color: black; font-size:1.6vw; color:#1E90FF">
+	<div class="col-xs-6"> Trade Link is:  &nbsp &nbsp www.csgomiddleman.com/{{randomString}} </div>
+	<div class="col-xs-3 col-xs-offset-3"><a href="/dashboard/" style="color: yellow">[homepage]</a></div>
+</div>
+
+
+<div class="row" style="height: 94vh; background-color: green color:#1E90FF">
+<div class="row" style="height: 5vh;font-size:1.6vw">
+  <div class="col-xs-3 text-center" style="height: 5vh; background-color: #81715E; color: yellow"> Person submitting skins </div>
+  <div class="col-xs-9 text-center" style="height: 5vh;background-color: #DDDEDE; color: #4B0082" > Person submitting money</div>
+</div>
+	<div class="row" style="height: 79vh; background-color: blue; color:#1E90FF">
+		<div class="col-xs-3" style="height: 100%; background-color: #FFB74C;">
+
+		<div class="text-center" id="postResponse" style="margin-top: 30vh;color:blue; font-size: 1.5vw"> checking/waiting for other user... </div>
+	
+
+			
+
+			<input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
+      <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
+
+		</div>
+		<div class="col-xs-9" style="height: 100%; 	background-color: 	#488a99;">
+
+	<div class="container2 text-center" style="margin-left: 31vw">	<img src = "{{profile_image_url_large}}"> </div>
+						<div class="text-center" style=" font-size:1.6vw; color:yellow"> {{username}} </div>	
+		
+
+		</div>
+	</div>
+<div class="row text-center" style="height:3vh; background-color: black; font-size:1vw; color:white">
+  <a style="color: red;font-weight: bold">Note: After the skins/keys deposit, the trade should happen within 20 mins and if it is not completed under that time then the items will be sent back</a>
+  </div>
+
+	<div class="row text-center" style="height: 8vh; background-color: green; font-size:3vw; color:white">
+	Status: <a style="color: white" id="full_status">checking</a> <img src="https://media.giphy.com/media/xUOrwrCJIJPHZ0IpdS/giphy.gif"/>
+	</div>
+
+
+
+</div>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script>
+	
+	// SOCKET SENDING
+	$(document).ready(function(){
+
+    var refreshIntervalId = setInterval(function () {
+        form = {
+            'randomString': $('#randomString').val()
+        }
+             $.post("http://localhost:4000/isUser1connected/", form, function(result){
+                  
+                  if(result!="error"){
+                    $("#postResponse").html(result);
+                    
+                    clearInterval(refreshIntervalId);
+                  }
+              });
+
+
+      },5000);
+
+
+    var refreshIntervalId2 = setInterval(function () {
+        form = {
+            'randomString': $('#randomString').val()
+        }
+             $.post("http://localhost:4000/tradeStatus/", form, function(result){
+                    $("#full_status").text(result)
+                  
+              });
+
+
+      },7000);
+
+    });
+
+
+
+
+</script>
+</body>
+</html>

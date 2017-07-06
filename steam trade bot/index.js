@@ -37,7 +37,6 @@ client.logOn(logOnOptions);
 client.on('loggedOn', () => {
     console.log('Logged into Steam');
     client.setPersona(SteamUser.Steam.EPersonaState.Online);
-    client.gamesPlayed(730);
 });
 
 function sendItems(itemsArray, partnerid) {
@@ -269,7 +268,7 @@ io.on('connection', function (socket) {
 
 
 
- console.log("checking and updating offer");
+ console.log("checking and updating offer: "+randomString);
 
         var tradeRevertedUpdate_and_check = setInterval(function () {
         //send POST MESSAGE every 5 seconds TO update trade_reverted field
