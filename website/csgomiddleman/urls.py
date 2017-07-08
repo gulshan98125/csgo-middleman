@@ -17,6 +17,9 @@ url(r'^trade_page/(?P<rString>[a-z A-Z 0-9]+)$', views.trade_page, name='trade_p
 url(r'^steamlogin/$', views.Login, name='steamLogin'),
 url(r'^process', views.LoginProcess, name='login_process'),
 url(r'^submitSkins/$', views.submitSkins, name='submitSkins'),
+url(r'^getSkinsNames/$', views.getSkinsNames, name='getSkinsNames'),
+url(r'^getSkinsUrls/$', views.getSkinsUrls, name='getSkinsUrls'),
+url(r'^submitSkinsNamesAndImages/$', views.submitSkinsNamesAndImages, name='submitSkinsNamesAndImages'),
 url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
 url(r'^isUser2connected/$', views.isUser2connected, name='isUser2connected'),
 #user2 is user giving money

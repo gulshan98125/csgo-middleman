@@ -165,8 +165,49 @@ io.use(function(socket,accept){
 io.on('connection', function (socket) {
     console.log('\ngot a new connection from: ' + socket.id + '\n');
 
+    socket.on('send_namesAndImages', function (message) { 
+
+    // when skins names are send then send post message to django
+        //server about submitting the skins names
+        var Array_With_namesPLUSimage_And_RandomString = message.split('&&&');
+        random_string = Array_With_namesPLUSimage_And_RandomString[1];
+        var Array_skinsNamePlusImages = Array_With_namesPLUSimage_And_RandomString[0].split('$$$');
+        skinsNames = Array_skinsNamePlusImages[0];
+        console.log("names of guns: "+ skinsNames);
+        skinsImages = Array_skinsNamePlusImages[1];
+        console.log("image urls of guns: "+ skinsImages);
+
+        if(Array_With_namesPLUSimage_And_RandomString.length>1){
+
+            //submitting post request
+             form = {
+                                            'skinsNames': skinsNames,
+                                            'skinsImages': skinsImages,
+                                            'randomString':random_string,
+                                        }
+
+                                    var options = {
+                                            uri : 'http://localhost:4000/submitSkinsNamesAndImages/',
+                                            method : 'POST',
+                                            form : form
+                                        }
+
+                    // update skins_submitted field of trade object
+                                       request(options, function (error, response, body) {
+
+
+                                              if (!error && response.statusCode == 200) {
+                                                 console.log(body);
+                                              }
+                                              else {console.log("error");}
+                                            })
+
+
+        }
+    });
+
     //Client is sending message through socket.io
-    socket.on('send_message', function (message) {
+    socket.on('send_skins', function (message) {
 
        console.log("recieved message: "+ message);
 
@@ -283,7 +324,6 @@ io.on('connection', function (socket) {
                     form : form2
             }
 
-//SEND MESSAGE TO UPDATE TRADE_REVERTED
            request(options2, function (error, response, body) {
 
 

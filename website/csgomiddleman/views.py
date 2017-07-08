@@ -254,6 +254,21 @@ def tradeStatus(request):
         return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
+def getSkinsNames(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.skins_submitted_name)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+@csrf_exempt
+def getSkinsUrls(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.skins_submitted_icons)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
 def submitSkins(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
@@ -265,6 +280,18 @@ def submitSkins(request):
         tradeObject.skins_submitted = "true"
         tradeObject.save()
         return HttpResponse("success skins submitted!")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
+def submitSkinsNamesAndImages(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        tradeObject.skins_submitted_name = request.POST.get('skinsNames')
+        tradeObject.skins_submitted_icons = request.POST.get('skinsImages')
+        tradeObject.save()
+        print ('submitted names:'+tradeObject.skins_submitted_name+'and Urls: '+ tradeObject.skins_submitted_icons)
+        return HttpResponse("success")
     else:
         return HttpResponse("error requested method doesn't exist")
 

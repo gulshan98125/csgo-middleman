@@ -141,12 +141,46 @@ a {
             'randomString': $('#randomString').val()
         }
              $.post("http://localhost:4000/tradeStatus/", form, function(result){
+                    if(result=="Skins submitted waiting for money"){
+                      //getting skins submitted names
+                      skinsNames ="";
+                      $.post("http://localhost:4000/getSkinsNames/", form, function(result){
+                        skinsNames = result;
+                        });
+                      //getting skins submitted images
+                      skinsImages = "";
+                      $.post("http://localhost:4000/getSkinsUrls/", form, function(result){
+                        skinsNames = result;
+                        });
+                      skinsNamesArray = skinsNames.split(';');
+                      skinsImagesArray = skinsImages.split(';');
+                      //open a popup here notifying user about the skins submitted
+
+                    }
+
+                    else{
+                      $("#full_status").text(result)
+                    }
+                  
+              });
+
+
+      },7000);
+
+    function Replay() {
+      var refreshIntervalId2 = setInterval(function () {
+        form = {
+            'randomString': $('#randomString').val()
+        }
+             $.post("http://localhost:4000/tradeStatus/", form, function(result){
                     $("#full_status").text(result)
                   
               });
 
 
       },7000);
+    }
+
 
     });
 

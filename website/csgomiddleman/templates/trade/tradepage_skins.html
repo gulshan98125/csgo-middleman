@@ -92,15 +92,15 @@ max-height:100%;
 
     <div class="col-xs-5">
 
-	<div class="container2 text-center" style="margin-left: 3vw; margin-top: 1vh">	<img src = "{{profile_image_url_large}}"> </div>
-						<div style="margin-left: 1vw; font-size:1.6vw; color: #34215F"> {{username}} </div>
-		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 3.4vw; margin-top: 2vh"><div style="font-size: 1vw"> show skins list</div> </button>
+	<div class="container2 text-center" style="margin-left: 8.5vw; margin-top: 1vh">	<img src = "{{profile_image_url_large}}"> </div>
+						<div class="text-center" style="margin-left: 1vw; font-size:1.6vw; color: #34215F"> {{username}} </div>
+		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show skins list</div> </button>
 
 
       <input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
       <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
 
-      <div style="margin-left: 2vw; margin-top: 15vh; font-size: 1.6vw; color: red; font-weight: bold"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
+      <div style="margin-left: 1vw; margin-top: 15vh; font-size: 1.6vw; color: red; font-weight: bold"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
 
       </div>
 
@@ -112,12 +112,10 @@ max-height:100%;
     <br>
 			{% for item in tupleList %}
 			   <label> <input type="checkbox" name="foo" value="{{item.1}}"/>
-<div style="display:inline-block; font-size: 1vw" class="popupHoverElement pointerChange">
-    {{item.0}}
+<div style="display:inline-block; font-size: 1vw" class="pointerChange" id="skins_names{{item.1}}">{{item.0}}</div>
+   <div class="imageContainer"> <img id="skins_image{{item.1}}" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
 
-   <div class="imageContainer"> <img src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
-</div>
-</label>
+</label> &nbsp
 			   {% endfor %}
 			    <button class="btn btn-primary" id="depositButton" style="margin-left: 16vw"> Deposit selected skins </button>
 			</div>
@@ -194,9 +192,25 @@ function unselectAll() {
 
       $('#depositButton').click(function(){
 			 var allVals = [];
+       itemsNames = "";
+       itemsImages = "";
+       itemsNamesWithImages = "";
 			 $('#inventorylist :checked').each(function(){
 		        allVals.push($(this).val());
 		    });
+
+
+       for(i=0;i<allVals.length-1;i++){
+        itemsNames += $('#skins_names'+allVals[i]).text() +";";
+        itemsImages += $('#skins_image'+allVals[i]).attr("src") +";";
+       }
+
+       itemsNames += $('#skins_names'+allVals[allVals.length-1]).text();
+       itemsImages += $('#skins_image'+allVals[allVals.length-1]).attr("src");
+       itemsNamesWithImages = itemsNames +"$$$" +itemsImages + "&&&"+ $('#randomString').val();
+        
+       console.log("items names:" + itemsNames);
+       console.log("items images:" + itemsImages);
 
        if(allVals.length>0) {
             var msg = $('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
@@ -205,11 +219,14 @@ function unselectAll() {
           var msg = $('#steamid').val();
        }
 
-		
-		console.log(msg);
+		socket.emit('send_namesAndImages', itemsNamesWithImages, function(data){
+                console.log(data);
+           });
+
+
 		if(msg){
 			console.log("message sent");
-           socket.emit('send_message', msg, function(data){
+           socket.emit('send_skins', msg, function(data){
                 console.log(data);
            });
            $('#image').attr("src","https://media.giphy.com/media/3oKIPjbXj8FIL6eG3e/giphy.gif");
