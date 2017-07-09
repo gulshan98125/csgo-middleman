@@ -20,6 +20,7 @@ url(r'^submitSkins/$', views.submitSkins, name='submitSkins'),
 url(r'^getSkinsNames/$', views.getSkinsNames, name='getSkinsNames'),
 url(r'^getSkinsUrls/$', views.getSkinsUrls, name='getSkinsUrls'),
 url(r'^submitSkinsNamesAndImages/$', views.submitSkinsNamesAndImages, name='submitSkinsNamesAndImages'),
+url(r'^submitNumberAndMoney/$', views.submitNumberAndMoney, name='submitNumberAndMoney'),
 url(r'^tradeAccepted/$', views.tradeAccepted, name='tradeAccepted'),
 url(r'^isUser2connected/$', views.isUser2connected, name='isUser2connected'),
 #user2 is user giving money

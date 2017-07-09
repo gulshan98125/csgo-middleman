@@ -136,8 +136,9 @@ a {
 
   <!-- Modal content -->
   <div class="modal-content">
-    <span class="close">&times;</span>
+    <div> <button class="btn btn-success" id = "accept"> Yes this is correct </button> &nbsp &nbsp &nbsp<button class="btn btn-danger" id="reject"> No I dont want these </button> </div>
     <div id="modalText">Some text in the Modal..</div>
+    
   </div>
 
 </div>
@@ -153,10 +154,7 @@ a {
 	$(document).ready(function(){
     var modal = document.getElementById('myModal');
     
-    var span = document.getElementsByClassName("close")[0];
-    span.onclick = function() {
-          modal.style.display = "none";
-      }
+   
 
 
     var refreshIntervalId = setInterval(function () {
@@ -195,11 +193,18 @@ a {
                         skinsImagesArray = skinsImages.split(';');
                         console.log(skinsNamesArray);
                         console.log(skinsImagesArray);
-                        modalTextHtmlString = "<ul>";
+
+                        var numKeys = skinsNamesArray.reduce(function(n, val) {
+                                                                      return n + (val.includes("key"));
+                                                                  }, 0);
+                        var numSkins = skinsNamesArray.length - numKeys;
+
+                        modalTextHtmlString = '<div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                       
                       for(i=0;i<skinsNamesArray.length;i++){
                         modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ '</li>'
                       }
+                      
                       modalTextHtmlString += "</ul>";
                       $('#modalText').html(modalTextHtmlString);
                       modal.style.display = "block";

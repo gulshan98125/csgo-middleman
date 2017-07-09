@@ -94,13 +94,16 @@ max-height:100%;
 
 	<div class="container2 text-center" style="margin-left: 8.5vw; margin-top: 1vh">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style="margin-left: 1vw; font-size:1.6vw; color: #34215F"> {{username}} </div>
-		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show/hide skins list</div> </button>
+		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show/hide skins list</div> </button> <br> <br>
 
+      <a style="font-weight: bold; color:blue">Paytm Mobile Number: +91</a>  <input type="text" size="10vw" style="color:black" id="mobileNumber"> <br> <br>
+      <a style="font-weight: bold; color:blue">Expected amount: </a> <input type="text" size="6vw"  style="margin-left: 5.15vw; color: black" id="expectedAmount"> <br> <br>
 
+      <button id="saveDetails" class="btn btn-primary" style="margin-left: 13.5vw"> save details</button>
       <input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
       <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
 
-      <div style="margin-left: 1vw; margin-top: 15vh; font-size: 1.6vw; color: red; font-weight: bold"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
+      <div style="margin-left: 1vw; margin-top: 6vh; font-size: 1.6vw; color: red; font-weight: bold"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
 
       </div>
 
@@ -188,7 +191,22 @@ function unselectAll() {
        if(data == "trade Accepted!"){
        document.getElementById('full_status').text = "skins submitted! waiting for money";}
       });
+      $('#saveDetails').click(function(){
+        form = {
+            'randomString': $('#randomString').val(),
+            'mobileNumber':$('#mobileNumber').val(),
+            'expectedAmount': $('#expectedAmount').val(),
+        }
+             $.post("http://localhost:4000/submitNumberAndMoney/", form, function(result){
+                  
+                  if(result!="error"){
+                     alert(result);
+                  
+                    clearInterval(refreshIntervalId);
+                  }
+              });
 
+      });
 
       $('#depositButton').click(function(){
 			 var allVals = [];

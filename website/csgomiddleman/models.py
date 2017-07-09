@@ -23,6 +23,8 @@ class trade(models.Model):
 	money_submitted = models.CharField(max_length=10,null=True)
 	random_string = models.CharField(max_length=100, unique=True) 
 	created_by = models.CharField(max_length=100)
+	mobileNumber = models.CharField(max_length=10, null=True)
+	expectedAmount = models.CharField(max_length=10, null=True)
 
 	def __str__(self):
 		if self.user_giving_skins is None:

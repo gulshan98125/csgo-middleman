@@ -78,6 +78,21 @@ def isTradeReverted(request):
         return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
+@login_required
+def submitNumberAndMoney(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_skins == request.user:
+            tradeObject.mobileNumber = request.POST.get('mobileNumber')
+            tradeObject.expectedAmount = request.POST.get('expectedAmount')
+            tradeObject.save()
+            return HttpResponse("successfully updated")
+        else:
+            return HttpResponse("error")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
 def updateTradeReverted(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
@@ -240,7 +255,7 @@ def tradeStatus(request):
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
             return HttpResponse("Skins submitted waiting for money")
         elif tradeObject.skins_submitted == "0":
-            return HttpResponse("Trade cancelled please create new")
+            return HttpResponse("Trade Expired please create new")
         else:
             return HttpResponse("Skins and Money Both submitted")
     else:
