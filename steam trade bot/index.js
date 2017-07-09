@@ -99,7 +99,7 @@ function depositItem(itemsArray, partnerid) {
 
                     console.log("reached here 3");
 
-                    offer.setMessage(`trade lelo :P`);
+                    offer.setMessage(`Offer id: `+offer.id);
                     console.log("reached here 4");
                     offer.send((err, status) => {
                         if (err) {

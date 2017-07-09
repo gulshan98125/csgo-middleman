@@ -78,7 +78,7 @@ max-height:100%;
 
 <div class="row" style="height: 5vh; background-color: black; font-size:1.6vw; color:#1E90FF">
 	<div class="col-xs-6"> Trade Link is:  &nbsp &nbsp www.csgomiddleman.com/{{randomString}} </div>
-	<div class="col-xs-3 col-xs-offset-3"><a href="/dashboard" style="color: yellow"> [Homepage] </a></div>
+	<div class="col-xs-3 col-xs-offset-3" align="right"><a href="/dashboard" style="color: yellow"> [Homepage] </a></div>
 </div>
 
 
@@ -94,7 +94,7 @@ max-height:100%;
 
 	<div class="container2 text-center" style="margin-left: 8.5vw; margin-top: 1vh">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style="margin-left: 1vw; font-size:1.6vw; color: #34215F"> {{username}} </div>
-		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show skins list</div> </button>
+		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show/hide skins list</div> </button>
 
 
       <input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
@@ -164,11 +164,11 @@ function unselectAll() {
       var socket = io.connect('http://localhost:3000/');
       
       socket.on('connect', function(){
-        console.log("connect");
+        console.log("connected");
       });
       
       $('#submit_skin_enable_button').click(function(){
-			$('#inventorylist').show();
+			$('#inventorylist').toggle();
 		})
 		
 

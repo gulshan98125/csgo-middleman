@@ -25,22 +25,43 @@ input[type=checkbox]
   padding: 1px;
 }
 
-.popupBox {
-	height: 20vh;
-	width: 15vw;
-    visibility:hidden;
-    opacity:0;        
-    transition:visibility 0s linear 0.3s,opacity 0.3s linear;
-    transition: all 0.4s ease;
-    transition-delay:  0.1s;
-
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-.popupHoverElement:hover > .popupBox {
-    visibility:visible;
-    opacity:1;
-    transition: all 0.3s ease;
-    transition-delay:  0s;        
-}       
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .pointerChange {
   cursor: pointer;
@@ -72,11 +93,12 @@ a {
 
 <div class="row" style="height: 5vh; background-color: black; font-size:1.6vw; color:#1E90FF">
 	<div class="col-xs-6"> Trade Link is:  &nbsp &nbsp www.csgomiddleman.com/{{randomString}} </div>
-	<div class="col-xs-3 col-xs-offset-3"><a href="/dashboard/" style="color: yellow">[homepage]</a></div>
+	<div class="col-xs-3 col-xs-offset-3" align="right"><a href="/dashboard/" style="color: yellow">[Homepage]</a></div>
 </div>
 
 
 <div class="row" style="height: 94vh; background-color: green color:#1E90FF">
+
 <div class="row" style="height: 5vh;font-size:1.6vw">
   <div class="col-xs-3 text-center" style="height: 5vh; background-color: #81715E; color: yellow"> Person submitting skins </div>
   <div class="col-xs-9 text-center" style="height: 5vh;background-color: #DDDEDE; color: #4B0082" > Person submitting money</div>
@@ -110,14 +132,32 @@ a {
 	</div>
 
 
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modalText">Some text in the Modal..</div>
+  </div>
 
 </div>
+
+
+
+
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
 	
 	// SOCKET SENDING
 	$(document).ready(function(){
+    var modal = document.getElementById('myModal');
+    
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() {
+          modal.style.display = "none";
+      }
+
 
     var refreshIntervalId = setInterval(function () {
         form = {
@@ -144,18 +184,41 @@ a {
                     if(result=="Skins submitted waiting for money"){
                       //getting skins submitted names
                       skinsNames ="";
+                      skinsImages = "";
                       $.post("http://localhost:4000/getSkinsNames/", form, function(result){
                         skinsNames = result;
+
+                        $.post("http://localhost:4000/getSkinsUrls/", form, function(result2){
+                        skinsImages = result2;
+
+                        skinsNamesArray = skinsNames.split(';');
+                        skinsImagesArray = skinsImages.split(';');
+                        console.log(skinsNamesArray);
+                        console.log(skinsImagesArray);
+                        modalTextHtmlString = "<ul>";
+                      
+                      for(i=0;i<skinsNamesArray.length;i++){
+                        modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ '</li>'
+                      }
+                      modalTextHtmlString += "</ul>";
+                      $('#modalText').html(modalTextHtmlString);
+                      modal.style.display = "block";
+                      //open a popup here notifying user about the skins submitted
+                      clearInterval(refreshIntervalId2);
+                      Replay();
+
+
+                        });
+
+                      
+
                         });
                       //getting skins submitted images
-                      skinsImages = "";
-                      $.post("http://localhost:4000/getSkinsUrls/", form, function(result){
-                        skinsNames = result;
-                        });
-                      skinsNamesArray = skinsNames.split(';');
-                      skinsImagesArray = skinsImages.split(';');
-                      //open a popup here notifying user about the skins submitted
+                      
 
+                    
+                      
+                      
                     }
 
                     else{

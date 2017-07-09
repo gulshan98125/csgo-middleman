@@ -31,7 +31,6 @@ def node_api(request):
 
         # print (request.session.session_key)
         user_id = session.get_decoded().get('_auth_user_id')
-        print (user_id)
         user = User.objects.get(id=user_id)
 
         #Create comment
@@ -55,7 +54,6 @@ def steam_login_dashboard(request):
 
 @login_required
 def create_random_trade_skins(request):
-    print ("reached here baba")
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
     trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false", time_posted=datetime.datetime.utcnow().replace(tzinfo=utc))
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
@@ -130,13 +128,11 @@ def trade_page(request, rString):
             
             for description in DictListofitems:
                 if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
-                    itemslistNew.append(description['name'])
+                    itemslistNew.append(description['market_hash_name'])
                     new_guns_icon_list.append(description['icon_url'])
                     idList.append(item['assetid'])
                     break
 
-        print ("length of Id list")
-        print (len(idList))
 
         tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
         context = {'profile_image_url_medium': profile_image_url_medium,
@@ -166,7 +162,6 @@ def trade_page(request, rString):
     else:
         if createdUser != request.user.username:
             if tradeObject.user_giving_money is None or tradeObject.user_giving_money==request.user:
-                print ("entered here bitchwa")
                 tradeObject.user_giving_money = request.user
                 tradeObject.save()
                 Profile_user_object = Profile.objects.get(user=request.user)
@@ -211,13 +206,11 @@ def trade_page(request, rString):
                     
                     for description in DictListofitems:
                         if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
-                            itemslistNew.append(description['name'])
+                            itemslistNew.append(description['market_hash_name'])
                             new_guns_icon_list.append(description['icon_url'])
                             idList.append(item['assetid'])
                             break
 
-                print ("length of Id list")
-                print (len(idList))
 
                 tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
                 context = {'profile_image_url_medium': profile_image_url_medium,
@@ -290,7 +283,6 @@ def submitSkinsNamesAndImages(request):
         tradeObject.skins_submitted_name = request.POST.get('skinsNames')
         tradeObject.skins_submitted_icons = request.POST.get('skinsImages')
         tradeObject.save()
-        print ('submitted names:'+tradeObject.skins_submitted_name+'and Urls: '+ tradeObject.skins_submitted_icons)
         return HttpResponse("success")
     else:
         return HttpResponse("error requested method doesn't exist")
