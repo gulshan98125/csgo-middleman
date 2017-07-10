@@ -276,9 +276,25 @@ io.on('connection', function (socket) {
                                             method : 'POST',
                                             form : form
                                         }
+                                form2 = {
+                                    'randomString': randomString,
+                                }
 
-                    // update skins_submitted field of trade object
-                                       request(options, function (error, response, body) {
+                                    var optionsP = {
+                                        uri : 'http://localhost:4000/updateTradeCreatedTime/',
+                                            method : 'POST',
+                                            form : form2
+                                    }
+
+
+                                    request(optionsP, function (error1, response1, body1) {
+
+
+                                              if (!error1 && response1.statusCode == 200) {
+                                                 
+                                //when trade created time is update then send the skins ids
+
+                                                 request(options, function (error, response, body) {
 
 
                                               if (!error && response.statusCode == 200) {
@@ -286,7 +302,17 @@ io.on('connection', function (socket) {
                                               }
                                               else {console.log("error");}
                                             })
-                                                        //For every item in recievedItems do item.new_assetid
+                                                    
+
+
+                                              }
+                                              else {console.log("error");}
+                                            })
+
+
+
+                    // update skins_submitted field of trade object
+                                           //For every item in recievedItems do item.new_assetid
 
 
                                    
@@ -362,7 +388,7 @@ io.on('connection', function (socket) {
                   else {console.log("error3");}
                 })
 
-    }, 3000);    
+    }, 7000);    
 
 
 

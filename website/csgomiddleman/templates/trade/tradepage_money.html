@@ -183,11 +183,16 @@ a {
                       //getting skins submitted names
                       skinsNames ="";
                       skinsImages = "";
+                      amount = "";
                       $.post("http://localhost:4000/getSkinsNames/", form, function(result){
                         skinsNames = result;
 
                         $.post("http://localhost:4000/getSkinsUrls/", form, function(result2){
                         skinsImages = result2;
+
+                          $.post("http://localhost:4000/getAmount/", form, function(result3){
+                            amount = result3;
+                          
 
                         skinsNamesArray = skinsNames.split(';');
                         skinsImagesArray = skinsImages.split(';');
@@ -199,7 +204,8 @@ a {
                                                                   }, 0);
                         var numSkins = skinsNamesArray.length - numKeys;
 
-                        modalTextHtmlString = '<div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
+                        modalTextHtmlString = 
+                        '<div> expected money ='+ amount +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                       
                       for(i=0;i<skinsNamesArray.length;i++){
                         modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ '</li>'
@@ -212,7 +218,7 @@ a {
                       clearInterval(refreshIntervalId2);
                       Replay();
 
-
+                            });
                         });
 
                       
@@ -227,7 +233,13 @@ a {
                     }
 
                     else{
-                      $("#full_status").text(result)
+                      if(result=="Trade Expired please create new"){
+                      $("#full_status").text(result);
+                      clearInterval(refreshIntervalId2);
+                    }
+                      else{
+                            $("#full_status").text(result);
+                          }
                     }
                   
               });
@@ -236,12 +248,17 @@ a {
       },7000);
 
     function Replay() {
-      var refreshIntervalId2 = setInterval(function () {
+      var refreshIntervalId3 = setInterval(function () {
         form = {
             'randomString': $('#randomString').val()
         }
              $.post("http://localhost:4000/tradeStatus/", form, function(result){
-                    $("#full_status").text(result)
+                    if(result=="Trade Expired please create new"){
+                      $("#full_status").text(result);
+                      clearInterval(refreshIntervalId3);
+                    }
+                      else{
+                    $("#full_status").text(result);}
                   
               });
 

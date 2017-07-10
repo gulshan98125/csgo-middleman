@@ -101,10 +101,10 @@ max-height:100%;
 						<div class="text-center" style="margin-left: 1vw; font-size:1.6vw; color: #34215F"> {{username}} </div>
 		<button id="submit_skin_enable_button" class="btn btn-primary formButtonfront" style="margin-left: 9vw; margin-top: 2vh"><div style="font-size: 1vw"> show/hide skins list</div> </button> <br> <br>
 
-      <a style="font-weight: bold; color:blue">Paytm Mobile Number: +91</a>  <input type="text" size="10vw" style="color:black" id="mobileNumber"> <br> <br>
-      <a style="font-weight: bold; color:blue">Expected amount: </a> <input type="text" size="6vw"  style="margin-left: 5.15vw; color: black" id="expectedAmount"> <br> <br>
+      <a style="font-weight: bold; color:blue; font-size: 1vw">Paytm Mobile Number: +91</a>  <input type="text" size="10vw" style="color:black" id="mobileNumber"> <br> <br>
+      <a style="font-weight: bold; color:blue; font-size: 1vw">Expected amount: </a> <input type="text" size="6vw"  style="margin-left: 5.15vw; color: black" id="expectedAmount"> <br> <br>
 
-      <button id="saveDetails" class="btn btn-primary formButtonfront2" style="margin-left: 13.5vw"> save details</button>
+      <button id="saveDetails" class="btn btn-primary formButtonfront2" style="margin-left: 13.5vw"> <div style="font-size: 1vw;"> save details </div></button>
       <input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
       <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
 
@@ -121,7 +121,7 @@ max-height:100%;
 			{% for item in tupleList %}
 			   <label> <input type="checkbox" name="foo" value="{{item.1}}"/>
 <div style="display:inline-block; font-size: 1vw" class="pointerChange" id="skins_names{{item.1}}">{{item.0}}</div>
-   <div class="imageContainer"> <img id="skins_image{{item.1}}" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
+   <div class="imageContainer pointerChange"> <img  id="skins_image{{item.1}}" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
 
 </label> &nbsp
 			   {% endfor %}
@@ -295,12 +295,17 @@ function unselectAll() {
       },5000);
 
 
-    var refreshIntervalId2 = setInterval(function () {
+    var refreshIntervalId3 = setInterval(function () {
         form = {
             'randomString': $('#randomString').val()
         }
              $.post("http://localhost:4000/tradeStatus/", form, function(result){
-                    $("#full_status").text(result)
+                    if(result=="Trade Expired please create new"){
+                      $("#full_status").text(result);
+                      clearInterval(refreshIntervalId3);
+                    }
+                      else{
+                    $("#full_status").text(result);}
                   
               });
 

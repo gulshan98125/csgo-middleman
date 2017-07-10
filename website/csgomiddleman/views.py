@@ -25,6 +25,16 @@ def afterLogin(request):
     else:
         return HttpResponseRedirect(reverse('steam_login_dashboard'))
 
+@csrf_exempt
+def updateTradeCreatedTime(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        tradeObject.time_posted = datetime.datetime.utcnow().replace(tzinfo=utc)
+        tradeObject.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 @login_required
 def home(request):
     comments = Comments.objects.select_related().all()[0:100]
@@ -75,13 +85,13 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade_skins(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false", time_posted=datetime.datetime.utcnow().replace(tzinfo=utc))
+    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
 def create_random_trade_paytm(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false", time_posted=datetime.datetime.utcnow().replace(tzinfo=utc))
+    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @csrf_exempt
@@ -105,7 +115,10 @@ def submitNumberAndMoney(request):
         if tradeObject.user_giving_skins == request.user:
             if len(request.POST.get('mobileNumber')) == 10 and len(request.POST.get('expectedAmount')) > 0:
                 tradeObject.mobileNumber = request.POST.get('mobileNumber')
-                tradeObject.expectedAmount = request.POST.get('expectedAmount')
+                amountInFloat = float(request.POST.get('expectedAmount'))
+                amountAfterCut = amountInFloat + (amountInFloat*0.01)
+                FinalamountInInt = int(amountAfterCut)
+                tradeObject.expectedAmount = str(FinalamountInInt)
                 tradeObject.save()
                 return HttpResponse("successfully updated")
             else:
@@ -296,6 +309,14 @@ def getSkinsUrls(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
         return HttpResponse(tradeObject.skins_submitted_icons)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
+def getAmount(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.expectedAmount)
     else:
         return HttpResponse("error requested method doesn't exist")
 
