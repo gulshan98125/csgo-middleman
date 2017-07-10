@@ -19,6 +19,13 @@ from steamauth import RedirectToSteamSignIn, GetSteamID64
 
 # Create your views here.
 @login_required
+def afterLogin(request):
+    if Profile.objects.filter(user=request.user).exists():
+        return HttpResponseRedirect(reverse('dashboard'))
+    else:
+        return HttpResponseRedirect(reverse('steam_login_dashboard'))
+
+@login_required
 def home(request):
     comments = Comments.objects.select_related().all()[0:100]
     return render(request, 'chat/index.html', locals())
@@ -46,7 +53,20 @@ def node_api(request):
 def dashboard(request):
     Profile_user_object = Profile.objects.get(user=request.user)
     steam64id = Profile_user_object.steam_id
-    return render(request, 'account/dashboard.html', {'user': request.user,'steamid':steam64id})
+    response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
+    data = json.load(response)
+    for jo in data:
+        object = data[jo]['players']
+    for oj in object:
+        profile_image_url_medium = oj['avatarmedium']
+        profile_image_url_large = oj['avatarfull']
+        profile_image_url_small = oj['avatar']
+    context = {'steamid': steam64id,
+    'profile_image_url_medium': profile_image_url_medium,
+    'profile_image_url_large': profile_image_url_large,
+    'profile_image_url_small': profile_image_url_small,
+    }
+    return render(request, 'account/dashboard.html', context)
 
 @login_required
 def steam_login_dashboard(request):
@@ -83,10 +103,13 @@ def submitNumberAndMoney(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
         if tradeObject.user_giving_skins == request.user:
-            tradeObject.mobileNumber = request.POST.get('mobileNumber')
-            tradeObject.expectedAmount = request.POST.get('expectedAmount')
-            tradeObject.save()
-            return HttpResponse("successfully updated")
+            if len(request.POST.get('mobileNumber')) == 10 and len(request.POST.get('expectedAmount')) > 0:
+                tradeObject.mobileNumber = request.POST.get('mobileNumber')
+                tradeObject.expectedAmount = request.POST.get('expectedAmount')
+                tradeObject.save()
+                return HttpResponse("successfully updated")
+            else:
+                return HttpResponse("error! invalid fields value")
         else:
             return HttpResponse("error")
     else:
