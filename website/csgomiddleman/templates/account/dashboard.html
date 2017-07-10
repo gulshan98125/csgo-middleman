@@ -4,31 +4,23 @@
 
 {% load static from staticfiles %}
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/test.css' %}" rel="stylesheet" type="text/css">
 </head>
-<body background="http://i.imgur.com/pQutOiJ.jpg" style="overflow-x: hidden;">
+<body background="http://i.imgur.com/kEVLXNt.jpg" style="overflow-x: hidden;">
 <div class="row" style="height: 10vh">
-	<div class="col-sm-6" style="font-size:2vw"> <a target="_blank" href ="https://steamcommunity.com/profiles/{{steamid}}" style="color:yellow"> Your steam profile <img src="{{profile_image_url_small}}"> </a> </div>
-	<div class="col-sm-2 col-sm-offset-4 text-center" style="font-size:2vw;">
-	 <a href="#" style="color:yellow"> Website Profile  </a>
-	 </div>
-</div>
-<div class="row" style="height: 10vh">
-<div class="col-sm-2 col-sm-offset-10 text-center" style="font-size:2vw;">
-<a href="/logout/" style="color:yellow"> logout  </a>
 </div>
 
- </div>
-
-<div class="text-center" style="font-size:2.5vw; color:#2AFF00"> Welcome! {{user}} <img src="{{profile_image_url_medium}}"> </div>
+<div class="text-center"> <img src="{{profile_image_url_large}}"> </div>
+<div class="text-center" style="font-size:2.5vw; color:#2AFF00; font-weight: bold; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"> Welcome! {{user}} </div>
 <div class="row" style="height: 10vh">
 
 </div>
 
 <div class="text-center" > 
 
-	<form class="form-inline" style="font-size:1.6vw; color:yellow; margin-top: 10vh">
+	<form class="form-inline" style="font-size:2.6vw; color:yellow; font-weight: bold; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">
 		YOU HAVE  &nbsp &nbsp &nbsp 
-		<select id="selected" class="form-control" style="width:10%">
+		<select id="selected" class="form-control" style="width:11vw; height: 7vh;background-color: white; color: black">
 			<option value="skins"> Skins/keys</option>
 			<option value="paytm"> Paytm </option>
 		</select>
@@ -44,7 +36,23 @@
 	<br> <br><br>
 	
 	<button id="button" class="btn btn-primary">Click to generate link and proceed</button>
-	
+	<div class="button_container" id="toggle">
+  <span class="top"></span>
+  <span class="middle"></span>
+  <span class="bottom"></span>
+</div>
+
+<div class="overlay" id="overlay">
+  <nav class="overlay-menu">
+    <ul>
+      <li ><a href="https://steamcommunity.com/profiles/{{steamid}}"> <img src="{{profile_image_url_medium}}"> Steam Profile</a></li>
+      <li><a href="#">Website Profile</a></li>
+      <li><a href="#">About us</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="{% url 'logout' %}?next=/login/">Logout</a></li>
+    </ul>
+  </nav>
+</div>
 
 	
 
@@ -52,6 +60,10 @@
 
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script>
+$('#toggle').click(function() {
+   $(this).toggleClass('active');
+   $('#overlay').toggleClass('open');
+  });
 	$("#button").click(function(){
 		window.location = "/create_random_trade"+"_"+$("#selected").val()
 	})

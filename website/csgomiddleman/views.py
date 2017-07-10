@@ -287,7 +287,7 @@ def tradeStatus(request):
         if tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "false":
             return HttpResponse("waiting for skins/keys")
         elif tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "true":
-            return HttpResponse("Money submitted,sending items respectively")
+            return HttpResponse("Money submitted not the skins")
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
             return HttpResponse("Skins submitted waiting for money")
         elif tradeObject.skins_submitted == "0":

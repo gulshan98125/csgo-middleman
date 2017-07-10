@@ -4,6 +4,7 @@
 
 {% block css %}
 	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/loginForm.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Login{% endblock %}
 
@@ -21,25 +22,19 @@
 					{% endif %}
 					<!-- Login Form -->
 
-<div class="col-md-4 col-md-4 col-sm-4 col-xs-12 col-xs-offset-4 right-background">
+<div class="col-md-5 col-md-5 col-sm-5 col-xs-12 col-xs-offset-4 right-background">
 
-					<form class="form-horizontal text-center" action="{% url 'login' %}" method="post">
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="username" placeholder="Username" required>
-							<span class="glyphicon glyphicon-user form-control-feedback"></span>
-						</div>
-						<br>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="password" name="password" placeholder="Password" required>
-							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
-						</div>
-						<input type="hidden" name="next" value="{{ next }}" />
-						{% csrf_token %}
-						<br>
-						<input class="btn btn-primary" type="submit" value="Log In" style="margin-bottom: 5px"><br>
-						<a href="#" class="text-muted">Forgot your password?</a><br>
-					</form>
-
+<form class="form-container" action="{% url 'login' %}" method="POST">
+<div class="form-title"><h2>Login</h2></div>
+<div class="form-title">username</div>
+<input class="form-field" type="text" name="username" /><br />
+<div class="form-title">password</div>
+<input class="form-field" type="password" name="password" /><br />
+{% csrf_token %}
+<div class="submit-container">
+<input class="submit-button" type="submit" value="Submit" />
+</div>
+</form>
 </div>					
 
 					<br><br><br>
