@@ -116,9 +116,9 @@ def submitNumberAndMoney(request):
             if len(request.POST.get('mobileNumber')) == 10 and len(request.POST.get('expectedAmount')) > 0:
                 tradeObject.mobileNumber = request.POST.get('mobileNumber')
                 amountInFloat = float(request.POST.get('expectedAmount'))
-                amountAfterCut = amountInFloat + (amountInFloat*0.01)
-                FinalamountInInt = int(amountAfterCut)
-                tradeObject.expectedAmount = str(FinalamountInInt)
+                amountAfterCut = amountInFloat + (amountInFloat*0.0069)
+                # FinalamountInInt = int(amountAfterCut)
+                tradeObject.expectedAmount = str(amountAfterCut)
                 tradeObject.save()
                 return HttpResponse("successfully updated")
             else:

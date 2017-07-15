@@ -388,7 +388,7 @@ io.on('connection', function (socket) {
                   else {console.log("error3");}
                 })
 
-    }, 7000);    
+    }, 4000);    
 
 
 

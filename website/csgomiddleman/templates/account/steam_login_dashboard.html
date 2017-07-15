@@ -5,7 +5,7 @@
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
 	
 </head>
-<body style="overflow-x: hidden;" background="http://i.imgur.com/pQutOiJ.jpg">
+<body style="overflow-x: hidden;" background="http://i.imgur.com/kEVLXNt.jpg">
 
 
 <div class="row">
@@ -14,12 +14,12 @@
 <div class="col-xs-6">
 <div class="row" style="height: 10vh">
 </div>
-<div class="text-center" style="font-size:3vw; color:#DC143C"> Welcome! {{user}} </div>
+<div class="text-center" style="font-size:3vw; color:yellow"> Welcome! {{user}} </div>
 <div class="row" style="height: 10vh"> </div>
 
 <div class="text-center" > 
-<div style="font-size: 2vw; color: yellow">Please login through steam to continue  </div>
-<div style="font-size: 2vw; color: yellow">Note: 1 steam id cannot be linked to multiple accounts</div>
+<div style="font-size: 2vw; color: red; font-weight: bold">Please login through steam to continue  </div>
+<div style="font-size: 2vw; color: red; font-weight: bold">Note: One steam id cannot be linked to multiple accounts at a time</div>
 
 <form action="{% url 'steamLogin' %}" style="margin-top: 10vh">
 	<input type="image" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Submit Form" />

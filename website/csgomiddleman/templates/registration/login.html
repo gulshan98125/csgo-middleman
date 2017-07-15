@@ -31,6 +31,7 @@
 <div class="form-title">password</div>
 <input class="form-field" type="password" name="password" /><br />
 {% csrf_token %}
+<input type="hidden" name="next" value="{{ next }}" />
 <div class="submit-container">
 <input class="submit-button" type="submit" value="Submit" />
 </div>

@@ -106,7 +106,9 @@ a {
 	<div class="row" style="height: 79vh; background-color: blue; color:#1E90FF">
 		<div class="col-xs-3" style="height: 100%; background-color: #FFB74C; border-style: solid; border-width: 2px; border-color: black;">
 
-		<div class="text-center" id="postResponse" style="margin-top: 30vh;color:blue; font-size: 1.5vw"> checking/waiting for other user... </div>
+		<div class="text-center" id="postResponse" style="margin-top: 30vh;color:blue; font-size: 1.5vw"> checking/waiting for other user...
+    <img src="https://media.giphy.com/media/3ohryqcmoMYEeBZsEU/giphy.gif">
+    </div>
 	
 
 			
@@ -205,7 +207,7 @@ a {
                         var numSkins = skinsNamesArray.length - numKeys;
 
                         modalTextHtmlString = 
-                        '<div> expected money ='+ amount +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
+                        '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                       
                       for(i=0;i<skinsNamesArray.length;i++){
                         modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ '</li>'

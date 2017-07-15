@@ -5,14 +5,37 @@
 {% load static from staticfiles %}
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
 <link href="{% static 'css/test.css' %}" rel="stylesheet" type="text/css">
+<link href="{% static 'css/left-nav.css' %}" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<style>
+	
+</style>
 </head>
 <body background="http://i.imgur.com/kEVLXNt.jpg" style="overflow-x: hidden;">
+<div id="cover"></div> 
+<nav id="main-nav">
+  <div id="nav-button"><i class="fa fa-navicon"></i></div>
+  <ul id="nav-list">
+  		<div style="color: yellow; font-weight: bold; margin-left: 45px; font-size: 2vw">Your trades</div>
+    <li><a href="#">Nav Item 1</a></li>
+    <li><a href="#">Nav Item 2</a></li>
+    <li><a href="#">Nav Item 3</a></li>
+    <li><a href="#">Nav Item 4</a></li>
+	<li><a href="#">Nav Item 5</a></li>
+	 <li><a href="#">Nav Item 6</a></li>
+    <li><a href="#">Nav Item 7</a></li>
+    <li><a href="#">Nav Item 8</a></li>
+    <li><a href="#">Nav Item 9</a></li>
+    <li><a href="#">Nav Item 10</a></li>
+	
+  </ul>
+</nav>
 <div class="row" style="height: 10vh">
 </div>
 
 <div class="text-center"> <img src="{{profile_image_url_large}}"> </div>
 <div class="text-center" style="font-size:2.5vw; color:#2AFF00; font-weight: bold; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"> Welcome! {{user}} </div>
-<div class="row" style="height: 10vh">
+<div class="row" style="height: 5vh">
 
 </div>
 
@@ -45,7 +68,7 @@
 <div class="overlay" id="overlay">
   <nav class="overlay-menu">
     <ul>
-      <li ><a href="https://steamcommunity.com/profiles/{{steamid}}"> <img src="{{profile_image_url_medium}}"> Steam Profile</a></li>
+      <li ><a href="https://steamcommunity.com/profiles/{{steamid}}" target="_blank"> <img src="{{profile_image_url_medium}}"> Steam Profile</a></li>
       <li><a href="#">Website Profile</a></li>
       <li><a href="#">About us</a></li>
       <li><a href="#">Contact</a></li>
@@ -58,6 +81,7 @@
 
 </div>
 
+
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script>
 $('#toggle').click(function() {
@@ -67,6 +91,22 @@ $('#toggle').click(function() {
 	$("#button").click(function(){
 		window.location = "/create_random_trade"+"_"+$("#selected").val()
 	})
+
+		var counter=0;
+	$('#nav-button').click( function(){
+		if(counter%2==0){
+		$('#main-nav').css("overflow-y", "scroll");
+	}
+		else {
+		
+		$('#main-nav').css("overflow-y", "hidden");
+		}
+  $(this).toggleClass('width');
+  $(this).parent().toggleClass('show');
+  $(this).children().toggleClass( 'fa-navicon').toggleClass( 'fa-close');
+  $('#nav-list').toggleClass('nav-show'); $('#cover').toggleClass('display'); 
+counter++;
+});
 </script>
 
 
