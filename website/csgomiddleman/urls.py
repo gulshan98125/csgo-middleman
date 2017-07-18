@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from . import views
 
 urlpatterns = [
-url(r'^$', views.home, name='home'),
 url(r'^node_api$', views.node_api, name='node_api'),
 url(r'^login/$', login, name='login'),
 # url(r'^register/$', views.register, name='register'),
@@ -32,4 +31,5 @@ url(r'^isUser1connected/$', views.isUser1connected, name='isUser1connected'),
 url(r'^tradeStatus/$', views.tradeStatus, name='tradeStatus'),
 url(r'^isTradeReverted/$', views.isTradeReverted, name='isTradeReverted'),
 url(r'^updateTradeReverted/$', views.updateTradeReverted, name='updateTradeReverted'),
+url(r'^faq/$', views.faq, name='faq'),
 ]

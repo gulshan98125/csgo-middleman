@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+
+
+<style>
+  
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'roboto', sans-serif;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6em;
+}
+
+ul, li { list-style: none; }
+
+#container {
+  width: 60%;
+  background-color: #483D8B;
+  margin:70px auto;
+  overflow: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  height: 40px;
+  background: #6bb170;
+  color: white;
+  text-align: center;
+  padding-top: 13px;
+}
+
+.faq li { padding: 20px; }
+
+.faq li.q {
+  background: #4FC2E;
+  font-weight: bold;
+  font-size: 120%;
+  border-bottom: 1px #ddd solid;
+  cursor: pointer;
+}
+
+.faq li.a {
+  background: #3BB0D6;
+  display: none;
+  color:#fff;
+}
+
+.rotate {
+  -moz-transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+@media (max-width:800px) {
+
+#container { width: 90%; }
+}
+
+
+</style>
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <title>FAQ</title>
+</head>
+  <body background="http://i.imgur.com/kEVLXNt.jpg">
+    <div id="container">
+      <div class="title"><h3>Frequently asked questions</h3></div>
+      <ul class="faq">
+        <li class="q" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><img src="http://i.imgur.com/aLKdRFm.png"> How to use the website?</li>
+        <li class="a">First of all both the users have to register on this website.<br> <br> After that one of the user has to create a trade link from the dashboard page and share that link with the other user.<br> <br> The other user clicks on that link and after opening the link both the users are connected to trade. <br> <br> Website accept skins/keys first and then the paytm, so the skins/keys depositor has to submit first and after successful submission website asks for paytm from the other user. <br> <br> After both the users have submitted their respective items, website then sends the items respectively to the users i.e. user giving skins/keys gets the paytm and the user giving money gets the skins/keys </li>
+        
+        <li class="q" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><img src="http://i.imgur.com/aLKdRFm.png">  I submitted my skins/keys but the other user didn't complete the trade</li>
+        <li class="a">In that case the items you submitted will be sent back to you after 20 minutes from the time you submitted them</li>
+        
+        <li class="q" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><img src="http://i.imgur.com/aLKdRFm.png">  I am getting HTTP 500 error what does this mean?</li>
+        <li class="a">This means that your inventory can't be loaded by the website. Check whether your inventory is loadable or not by going into your steam profile, if not then try again after some time.</li>
+        
+        <li class="q" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><img src="http://i.imgur.com/aLKdRFm.png">  The trade completed but I didn't receive my skins/keys or money</li>
+        <li class="a"> Keep calm, if there is any failure in the trade then your items or money is safe with us. <br> <br> Write us a support ticket about this matter with your screenshot of the accepted trade or sent paytm money. <br> <br> Screenshots are very useful to us for smooth workflow, if you forgot to take it then send us the 6 letters long trade id from your trade history. </li>
+        
+        <li class="q" style="color: white; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><img src="http://i.imgur.com/aLKdRFm.png">  Why some of my items are not displayed?</li>
+        <li class="a">Only tradeable items are displayed. If none of your items are displayed then maybe its because they aren't tradable or you have a vac ban id.</li>
+       
+      </ul>
+    </div>
+<script type="text/javascript">
+//Accordian Action
+var action = 'click';
+var speed = "500";
+
+
+//Document.Ready
+$(document).ready(function(){
+  //Question handler
+$('li.q').on(action, function(){
+  //gets next element
+  //opens .a of selected question
+$(this).next().slideToggle(speed)
+    //selects all other answers and slides up any open answer
+    .siblings('li.a').slideUp();
+  
+  //Grab img from clicked question
+var img = $(this).children('img');
+  //Remove Rotate class from all images except the active
+  $('img').not(img).removeClass('rotate');
+  //toggle rotate class
+  img.toggleClass('rotate');
+
+});//End on click
+
+
+
+
+});//End Ready
+
+</script>
+  </body>
+</html>

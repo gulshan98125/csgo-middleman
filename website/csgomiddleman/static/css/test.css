@@ -11,14 +11,14 @@
   margin: 0 auto;
   font-family: 'Roboto', sans-serif; }
   .container p {
-    font-size: 20px; }
+    font-size: 5px; }
   .container a {
     display: inline-block;
     position: relative;
     text-align: center;
     color: #FF5252;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 5px;
     overflow: hidden;
     top: 5px; }
     .container a:after {

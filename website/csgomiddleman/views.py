@@ -36,9 +36,8 @@ def updateTradeCreatedTime(request):
         return HttpResponse("error requested method doesn't exist")
 
 @login_required
-def home(request):
-    comments = Comments.objects.select_related().all()[0:100]
-    return render(request, 'chat/index.html', locals())
+def faq(request):
+    return render(request, 'questions/faq.html')
 
 @csrf_exempt
 def node_api(request):
