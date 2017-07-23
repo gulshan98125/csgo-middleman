@@ -28,10 +28,10 @@ class trade(models.Model):
 
 	def __str__(self):
 		if self.user_giving_skins is None:
-			string = "created by- "+ self.user_giving_money.username
+			string = "created by- "+ self.user_giving_money.username + ", id= " + self.random_string
 			return string
 		else:
-			string = "created by- "+ self.user_giving_skins.username
+			string = "created by- "+ self.user_giving_skins.username + ", id= " + self.random_string
 			return string
 
 
