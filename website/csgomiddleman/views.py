@@ -1,6 +1,5 @@
 import urllib.request as urllib2
 import json
-import redis
 from django.shortcuts import render
 import datetime
 from django.utils.timezone import utc
@@ -58,12 +57,21 @@ def node_api(request):
     else:
         return HttpResponse("error :(")
 
+def register(request):
+    if(request.method=='POST'):
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+    return render(request, 'registration/register.html')
+
 @login_required
 def dashboard(request):
     Profile_user_object = Profile.objects.get(user=request.user)
     steam64id = Profile_user_object.steam_id
     response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-    data = json.load(response)
+    str_response = response.read().decode('utf-8')
+    data = json.loads(str_response)
     for jo in data:
         object = data[jo]['players']
     for oj in object:
@@ -154,7 +162,8 @@ def trade_page(request, rString):
         Profile_user_object = Profile.objects.get(user=request.user)
         steam64id = Profile_user_object.steam_id
         response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-        data = json.load(response)
+        str_response = response.read().decode('utf-8')
+        data = json.loads(str_response)
         for jo in data:
             object = data[jo]['players']
         for oj in object:
@@ -163,7 +172,7 @@ def trade_page(request, rString):
             profile_image_url_small = oj['avatar']
             profile_image_url_medium = oj['avatarmedium']
         response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
-        data2 = json.loads(response2.read())
+        data2 = json.loads(response2.read().decode('utf-8'))
         DictListofitems = data2['descriptions']
         guns_icon_list = []
         itemsToSkipList= []
@@ -394,7 +403,8 @@ def LoginProcess(request):
         Profile_user_object.save()
         print ("userwa is="+Profile_user_object.user.username+" with steamid = "+Profile_user_object.steam_id)
         response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steamid)
-        data = json.load(response)
+        str_response = response.read().decode('utf-8')
+        data = json.loads(str_response)
         for jo in data:
             object = data[jo]['players']
         for oj in object:

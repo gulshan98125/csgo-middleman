@@ -3,45 +3,42 @@
 {% load static from staticfiles %}
 
 {% block css %}
-	<link href="{% static 'css/register.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/loginForm.css' %}" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Register{% endblock %}
 
 {% block content %}
-	
 
-					<!-- Signup Form -->
-					<form class="form-horizontal text-center" action="{% url 'register' %}" method="post">
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="name" placeholder="Name" required>
-							<span class="glyphicon glyphicon-pencil form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="username" placeholder="Username" required>
-							<span class="glyphicon glyphicon-user form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="email" placeholder="Email" required>
-							<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="phone_no" placeholder="Phone No" required>
-							<span class="glyphicon glyphicon-phone form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="text" name="beacon_id" placeholder="Beacon Id" required>
-							<span class="glyphicon glyphicon-hdd form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="password" name="password" placeholder="Password" required>
-							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
-						</div>
-						<div class="form-group has-success has-feedback">
-							<input class="form-control" type="password" name="password2" placeholder="Confirm Password" required>
-							<span class="glyphicon glyphicon-lock form-control-feedback"></span>
-						</div>
-						{% csrf_token %}
-						<input class="btn btn-success" type="submit" value="SignUp">
-					</form>
+{% if form.errors %}
+						<h6 class="text-danger">
+							Your username/password didn't match.
+							Please try again.
+						</h6>
+					{% else %}
+						<h6>
+							<br><br>
+						</h6>
+					{% endif %}
+					<!-- Register Form -->
+
+<div class="col-md-5 col-md-5 col-sm-5 col-xs-12 col-xs-offset-4 right-background">
+
+<form class="form-container" action="{% url 'register' %}" method="POST">
+<div class="form-title"><h2>Register</h2></div>
+<div class="form-title">username</div>
+<input class="form-field" type="text" name="username" /><br />
+<div class="form-title">password</div>
+<input class="form-field" type="password" name="password" /><br />
+{% csrf_token %}
+<input type="hidden" name="next" value="{{ next }}" />
+<div class="submit-container">
+<input class="submit-button" type="submit" value="Submit" />
+</div>
+</form>
+</div>					
+
+					<br><br><br>
 					
+
 {% endblock %}

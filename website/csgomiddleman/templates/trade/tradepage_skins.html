@@ -154,7 +154,7 @@ max-height:100%;
 
 </div>
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
+<script src="http://139.59.67.203/socket/socket.io/socket.io.js"></script>
 <script>
 	
   function selectAll() {
@@ -172,7 +172,7 @@ function unselectAll() {
 	// SOCKET SENDING
 	$(document).ready(function(){
 
-      var socket = io.connect('http://localhost:3000/');
+      var socket = io.connect('http://139.59.67.203/socket/');
       
       socket.on('connect', function(){
         console.log("connected");
@@ -205,7 +205,7 @@ function unselectAll() {
             'mobileNumber':$('#mobileNumber').val(),
             'expectedAmount': $('#expectedAmount').val(),
         }
-             $.post("http://localhost:4000/submitNumberAndMoney/", form, function(result){
+             $.post("http://139.59.67.203/submitNumberAndMoney/", form, function(result){
                   
                   if(result!="error"){
                      alert(result);
@@ -285,7 +285,7 @@ function unselectAll() {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://localhost:4000/isUser2connected/", form, function(result){
+             $.post("http://139.59.67.203/isUser2connected/", form, function(result){
                   
                   if(result!="error"){
                     $("#postResponse").html(result);
@@ -302,7 +302,7 @@ function unselectAll() {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://localhost:4000/tradeStatus/", form, function(result){
+             $.post("http://139.59.67.203/tradeStatus/", form, function(result){
                     if(result=="Trade Expired please create new"){
                       $("#full_status").text(result);
                       clearInterval(refreshIntervalId3);
