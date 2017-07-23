@@ -1,6 +1,5 @@
 import urllib.request as urllib2
 import json
-import redis
 from django.shortcuts import render
 import datetime
 from django.utils.timezone import utc
@@ -134,7 +133,7 @@ def updateTradeReverted(request):
         postedTime = tradeObject.time_posted
         timediff = datetime.datetime.utcnow().replace(tzinfo=utc) - postedTime
         timediff_inSeconds = timediff.total_seconds()
-        if timediff_inSeconds > 120 and tradeObject.money_submitted=="false":
+        if timediff_inSeconds > 1200 and tradeObject.money_submitted=="false":
             tradeObject.trade_reverted = "true"
             tradeObject.skins_submitted = "0"
             tradeObject.save()

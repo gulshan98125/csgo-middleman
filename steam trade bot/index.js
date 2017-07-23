@@ -27,9 +27,9 @@ const manager = new TradeOfferManager({
 
 
 const logOnOptions = {
-    accountName: 'gulshan98126',
-    password: 'MAAchuda12345',
-    twoFactorCode: SteamTotp.generateAuthCode('UA7FQ4kdg\/YTI2TjpYdunoeRPm4=')
+    accountName: 'gulshan98127',
+    password: 'Csgommbot12345',
+    twoFactorCode: SteamTotp.generateAuthCode('V03wm9pAENwd5HIv6DrX45xquk0=')
 };
 
 client.logOn(logOnOptions);
@@ -123,7 +123,7 @@ client.on('webSession', (sessionid, cookies) => {
     manager.setCookies(cookies);
 
     community.setCookies(cookies);
-    community.startConfirmationChecker(10000, 'fkuKQSh352aYXGkR82Rh3fXEHA0=');
+    community.startConfirmationChecker(10000, 'oo7tg89iJEAEDFF5TwtKxTIpdiE=');
 
     
 });
@@ -354,7 +354,7 @@ io.on('connection', function (socket) {
 
 
                   if (!error && response.statusCode == 200) {
-                     console.log(body);
+                     // console.log(body);
                   }
                   else {console.log("error2");}
                 })
