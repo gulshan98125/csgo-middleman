@@ -149,7 +149,6 @@ a {
 
 
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
 	
 	// SOCKET SENDING
@@ -163,7 +162,7 @@ a {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://localhost:4000/isUser1connected/", form, function(result){
+             $.post("http://139.59.67.203/isUser1connected/", form, function(result){
                   
                   if(result!="error"){
                     $("#postResponse").html(result);
@@ -180,19 +179,19 @@ a {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://localhost:4000/tradeStatus/", form, function(result){
+             $.post("http://139.59.67.203/tradeStatus/", form, function(result){
                     if(result=="Skins submitted waiting for money"){
                       //getting skins submitted names
                       skinsNames ="";
                       skinsImages = "";
                       amount = "";
-                      $.post("http://localhost:4000/getSkinsNames/", form, function(result){
+                      $.post("http://139.59.67.203/getSkinsNames/", form, function(result){
                         skinsNames = result;
 
-                        $.post("http://localhost:4000/getSkinsUrls/", form, function(result2){
+                        $.post("http://139.59.67.203/getSkinsUrls/", form, function(result2){
                         skinsImages = result2;
 
-                          $.post("http://localhost:4000/getAmount/", form, function(result3){
+                          $.post("http://139.59.67.203/getAmount/", form, function(result3){
                             amount = result3;
                           
 
@@ -254,7 +253,7 @@ a {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://localhost:4000/tradeStatus/", form, function(result){
+             $.post("http://139.59.67.203/tradeStatus/", form, function(result){
                     if(result=="Trade Expired please create new"){
                       $("#full_status").text(result);
                       clearInterval(refreshIntervalId3);
