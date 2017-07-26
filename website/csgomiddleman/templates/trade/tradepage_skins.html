@@ -106,7 +106,8 @@ max-height:100%;
       <a style="font-weight: bold; color:blue; font-size: 1vw; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">Expected amount: </a> <input type="text" size="6vw"  style="margin-left: 5.15vw; color: black" id="expectedAmount"> <br> <br>
 
       <button id="saveDetails" class="btn btn-primary formButtonfront2" style="margin-left: 13.5vw"> <div style="font-size: 1vw;"> save details </div></button>
-      <input type="hidden" name="steamid" id="steamid" value="{{tradeUrl}}">
+      <input type="hidden" name="steamid" id="steamid" value="{{steamid}}">
+      <input type="hidden" name="tradeUrl" id="tradeUrl" value="{{tradeUrl}}">
       <input type="hidden" name="randomString" id="randomString" value="{{randomString}}">
 
       <div style="margin-left: 1vw; margin-top: 6vh; font-size: 1.6vw; color: red; font-weight: bold"> Trade Status: <a id="status"> None sent </a> <img id="image" src="#" style="display: none;" />  </div>
@@ -239,10 +240,10 @@ function unselectAll() {
        console.log("items images:" + itemsImages);
 
        if(allVals.length>0) {
-            var msg = $('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
+            var msg = $('#tradeUrl').val()+ ","+$('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
        }
        else {
-          var msg = $('#steamid').val();
+          var msg = $('#tradeUrl').val()+ "," + $('#randomString').val() + "," + $('#steamid').val();
        }
 
 		socket.emit('send_namesAndImages', itemsNamesWithImages, function(data){

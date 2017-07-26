@@ -39,13 +39,13 @@ client.on('loggedOn', () => {
     client.setPersona(SteamUser.Steam.EPersonaState.Online);
 });
 
-function sendItems(itemsArray, partnerid) {
+function sendItems(itemsArray, partnerid, tradeUrl) {
     console.log("sending items back");
     manager.loadInventory(730, 2, true, (err, inventory) => {
         if (err) {
             console.log(err);
         } else {
-            const offer = manager.createOffer(partnerid);
+            const offer = manager.createOffer(tradeUrl);
             for(i=0; i<itemsArray.length; i++){
                      
                     const item = inventory.find((item) => item.assetid ==''+itemsArray[i]);
@@ -70,13 +70,13 @@ function sendItems(itemsArray, partnerid) {
 
 
 
-function depositItem(itemsArray, partnerid) {
+function depositItem(itemsArray, partnerid, tradeUrl) {
     console.log("idtotrade: "+ partnerid);
     const partner = partnerid;
     const appid = 730;
     const contextid = 2;
 
-    const offer = manager.createOffer(partner);
+    const offer = manager.createOffer(tradeUrl);
 
     manager.loadInventory(appid, contextid, true, (err, myInv) => {
         if (err) {
@@ -99,7 +99,7 @@ function depositItem(itemsArray, partnerid) {
 
                     console.log("reached here 3");
 
-                    offer.setMessage(`Offer id: `+offer.id);
+                    offer.setMessage(`from csgomm.store`);
                     console.log("reached here 4");
                     offer.send((err, status) => {
                         if (err) {
@@ -218,16 +218,17 @@ io.on('connection', function (socket) {
         
         msg = "";
 
-        if(itemsId_WithSteamId_and_RandomString.length>2){
+        if(itemsId_WithSteamId_and_RandomString.length>3){
             var itemsOnlyArray = [];
-                   for(j=2; j<itemsId_WithSteamId_and_RandomString.length; j++){
+                   for(j=3; j<itemsId_WithSteamId_and_RandomString.length; j++){
                     itemsOnlyArray.push(itemsId_WithSteamId_and_RandomString[j]);
                    }
 
-        const partnerid = itemsId_WithSteamId_and_RandomString[1]+'';
-        const randomString = itemsId_WithSteamId_and_RandomString[0]+'';
+        const tradeUrl = itemsId_WithSteamId_and_RandomString[0] +'';
+        const partnerid = itemsId_WithSteamId_and_RandomString[2]+'';
+        const randomString = itemsId_WithSteamId_and_RandomString[1]+'';
 
-            depositItem(itemsOnlyArray, partnerid);
+            depositItem(itemsOnlyArray, partnerid, tradeUrl);
             var refreshIntervalId = setInterval(function () {
                                 manager.getOffer(ActiveTradeOffersMap[parseInt(partnerid)],(err,body) =>{
                                 if (err) {
@@ -376,7 +377,7 @@ io.on('connection', function (socket) {
                      else if(body != "false"){
                         //SEND BACK TRADE OFFER HERE RECEIVED BODY IS string of assetids
                         var Array_of_assetids_received = body.split(',');
-                        sendItems(Array_of_assetids_received, partnerid);
+                        sendItems(Array_of_assetids_received, partnerid, tradeUrl);
                         //END THE INTERVAL
                         clearInterval(tradeRevertedUpdate_and_check);
                         // NOTIFY USER THROUGH SOCKET
