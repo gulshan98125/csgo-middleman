@@ -168,6 +168,8 @@ def updateTradeReverted(request):
 def trade_page(request, rString):
     tradeObject = trade.objects.get(random_string=rString)
     createdUser = tradeObject.created_by
+    Profile_user_object = Profile.objects.get(user=request.user)
+    tradeUrl = Profile_user_object.tradeUrl
     if createdUser == request.user.username and tradeObject.user_giving_skins==request.user:
         #tradelink created by user giving skins
         Profile_user_object = Profile.objects.get(user=request.user)
@@ -213,6 +215,7 @@ def trade_page(request, rString):
         'itemsidlist': idList,
         'tupleList': tupleList,
         'steamid': steam64id,
+        'tradeUrl': tradeUrl,
         }
         return render(request, 'trade/tradepage_skins.html', context)
     
@@ -227,7 +230,7 @@ def trade_page(request, rString):
         for oj in object:
             username = oj['personaname']
             profile_image_url_large = oj['avatarfull']
-        context = {'username':username,'randomString':rString,'steamid':steam64id,'profile_image_url_large': profile_image_url_large}
+        context = {'username':username,'randomString':rString,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
         return render(request, 'trade/tradepage_money.html', context)
     else:
         if createdUser != request.user.username:
@@ -243,7 +246,7 @@ def trade_page(request, rString):
                 for oj in object:
                     username = oj['personaname']
                     profile_image_url_large = oj['avatarfull']
-                context = {'username':username,'randomString':rString,'steamid':steam64id,'profile_image_url_large': profile_image_url_large}
+                context = {'username':username,'randomString':rString,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
                 return render(request, 'trade/tradepage_money.html', context)
             elif tradeObject.user_giving_skins is None or tradeObject.user_giving_skins==request.user:    
                 #when user came from tradelink created by money submitter
@@ -291,6 +294,7 @@ def trade_page(request, rString):
                 'itemsidlist': idList,
                 'tupleList': tupleList,
                 'steamid': steam64id,
+                'tradeUrl':tradeUrl,
                 }
                 return render(request, 'trade/tradepage_skins.html', context)
 
