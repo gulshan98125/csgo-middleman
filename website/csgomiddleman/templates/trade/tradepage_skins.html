@@ -154,7 +154,7 @@ max-height:100%;
 
 </div>
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-<script src="http://139.59.67.203/socket/socket.io/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script>
 	
   function selectAll() {
@@ -172,7 +172,7 @@ function unselectAll() {
 	// SOCKET SENDING
 	$(document).ready(function(){
 
-      var socket = io.connect('http://139.59.67.203/socket/');
+      var socket = io.connect('http://139.59.67.203:3000/');
       
       socket.on('connect', function(){
         console.log("connected");
