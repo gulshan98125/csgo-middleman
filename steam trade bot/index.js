@@ -187,7 +187,7 @@ io.on('connection', function (socket) {
                                         }
 
                                     var options = {
-                                            uri : 'http://localhost:4000/submitSkinsNamesAndImages/',
+                                            uri : 'http://139.59.67.203/submitSkinsNamesAndImages/',
                                             method : 'POST',
                                             form : form
                                         }
@@ -227,7 +227,6 @@ io.on('connection', function (socket) {
         const tradeUrl = itemsId_WithSteamId_and_RandomString[0] +'';
         const partnerid = itemsId_WithSteamId_and_RandomString[2]+'';
         const randomString = itemsId_WithSteamId_and_RandomString[1]+'';
-
             depositItem(itemsOnlyArray, partnerid, tradeUrl);
             var refreshIntervalId = setInterval(function () {
                                 manager.getOffer(ActiveTradeOffersMap[parseInt(partnerid)],(err,body) =>{
@@ -273,7 +272,7 @@ io.on('connection', function (socket) {
                                         }
 
                                     var options = {
-                                            uri : 'http://localhost:4000/submitSkins/',
+                                            uri : 'http://139.59.67.203/submitSkins/',
                                             method : 'POST',
                                             form : form
                                         }
@@ -282,7 +281,7 @@ io.on('connection', function (socket) {
                                 }
 
                                     var optionsP = {
-                                        uri : 'http://localhost:4000/updateTradeCreatedTime/',
+                                        uri : 'http://139.59.67.203/updateTradeCreatedTime/',
                                             method : 'POST',
                                             form : form2
                                     }
@@ -346,7 +345,7 @@ io.on('connection', function (socket) {
                     }
 
             var options2 = {
-                    uri : 'http://localhost:4000/updateTradeReverted/',
+                    uri : 'http://139.59.67.203/updateTradeReverted/',
                     method : 'POST',
                     form : form2
             }
@@ -361,7 +360,7 @@ io.on('connection', function (socket) {
                 })
 
            var options3 = {
-            uri : 'http://localhost:4000/isTradeReverted/',
+            uri : 'http://139.59.67.203/isTradeReverted/',
                     method : 'POST',
                     form : form2
            }
