@@ -24,6 +24,17 @@ def afterLogin(request):
     else:
         return HttpResponseRedirect(reverse('steam_login_dashboard'))
 
+@login_required
+@csrf_exempt
+def updateTradeUrl(request):
+    if request.method == "POST":
+        Profile_user_object = Profile.objects.get(user=request.user)
+        Profile_user_object.tradeUrl = request.POST.get('tradeUrl')
+        Profile_user_object.save()
+        return HttpResponse("successfully updated trade url")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 @csrf_exempt
 def updateTradeCreatedTime(request):
     if request.method == "POST":
@@ -210,7 +221,7 @@ def trade_page(request, rString):
         Profile_user_object = Profile.objects.get(user=request.user)
         steam64id = Profile_user_object.steam_id
         response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-        data = json.load(response)
+        data = json.loads(response.read().decode('utf-8'))
         for jo in data:
             object = data[jo]['players']
         for oj in object:
@@ -226,7 +237,7 @@ def trade_page(request, rString):
                 Profile_user_object = Profile.objects.get(user=request.user)
                 steam64id = Profile_user_object.steam_id
                 response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-                data = json.load(response)
+                data = json.loads(response.read().decode('utf-8'))
                 for jo in data:
                     object = data[jo]['players']
                 for oj in object:
@@ -241,7 +252,7 @@ def trade_page(request, rString):
                 Profile_user_object = Profile.objects.get(user=request.user)
                 steam64id = Profile_user_object.steam_id
                 response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-                data = json.load(response)
+                data = json.loads(response.read().decode('utf-8'))
                 for jo in data:
                     object = data[jo]['players']
                 for oj in object:
@@ -250,7 +261,7 @@ def trade_page(request, rString):
                     profile_image_url_small = oj['avatar']
                     profile_image_url_medium = oj['avatarmedium']
                 response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
-                data2 = json.loads(response2.read())
+                data2 = json.loads(response2.read().decode('utf-8'))
                 DictListofitems = data2['descriptions']
                 guns_icon_list = []
                 itemsToSkipList= []

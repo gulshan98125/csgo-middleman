@@ -59,6 +59,8 @@
 	<br> <br><br>
 	
 	<button id="button" class="btn btn-primary">Click to generate link and proceed</button>
+	<br><br> <input type="text" name="tradeUrl" id="tradeUrl" size="70vw"> <button id="submitTradeUrl" class="btn btn-danger">Update Trade Link</button>
+
 	<div class="button_container" id="toggle">
   <span class="top"></span>
   <span class="middle"></span>
@@ -89,6 +91,16 @@ $('#toggle').click(function() {
   });
 	$("#button").click(function(){
 		window.location = "/create_random_trade"+"_"+$("#selected").val()
+	})
+	$("#submitTradeUrl").click(function(){
+		form = {
+            'tradeUrl': $('#tradeUrl').val(),
+        }
+        $.post("http://139.59.67.203/updateTradeUrl/", form, function(result){
+        	alert(result);
+        });
+
+
 	})
 
 		var counter=0;

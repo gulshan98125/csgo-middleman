@@ -32,4 +32,5 @@ url(r'^tradeStatus/$', views.tradeStatus, name='tradeStatus'),
 url(r'^isTradeReverted/$', views.isTradeReverted, name='isTradeReverted'),
 url(r'^updateTradeReverted/$', views.updateTradeReverted, name='updateTradeReverted'),
 url(r'^faq/$', views.faq, name='faq'),
+url(r'^updateTradeUrl/$', views.updateTradeUrl, name='updateTradeUrl'),
 ]
