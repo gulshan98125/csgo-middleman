@@ -43,6 +43,8 @@ def checkTradeUrl(request):
         Profile_user_object = Profile.objects.get(user=request.user)
         if Profile_user_object.tradeUrl is None:
             return HttpResponse("error")
+        elif len(Profile_user_object.tradeUrl) == 0:
+            return HttpResponse("error")
         else:
             return HttpResponse("success")
     else:
@@ -92,6 +94,7 @@ def register(request):
 @login_required
 def dashboard(request):
     Profile_user_object = Profile.objects.get(user=request.user)
+    tradeUrl = Profile_user_object.tradeUrl
     steam64id = Profile_user_object.steam_id
     response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
     str_response = response.read().decode('utf-8')
@@ -106,6 +109,7 @@ def dashboard(request):
     'profile_image_url_medium': profile_image_url_medium,
     'profile_image_url_large': profile_image_url_large,
     'profile_image_url_small': profile_image_url_small,
+    'tradeUrl':tradeUrl,
     'domain':settings.DOMAIN,}
     return render(request, 'account/dashboard.html', context)
 
@@ -443,5 +447,6 @@ def LoginProcess(request):
         'profile_image_url_medium': profile_image_url_medium,
         'profile_image_url_large': profile_image_url_large,
         'profile_image_url_small': profile_image_url_small,
+        'tradeUrl': "",
         'domain': settings.DOMAIN,}
     return render(request, 'account/dashboard.html', context)

@@ -2,10 +2,13 @@ from django.conf.urls import url, include
 from django.contrib.auth.views import login, logout, logout_then_login, password_change, password_change_done
 from django.contrib.auth.decorators import login_required
 from . import views
+from django.contrib.auth.decorators import user_passes_test
+
+login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/dashboard/')
 
 urlpatterns = [
 url(r'^node_api$', views.node_api, name='node_api'),
-url(r'^$', login, name='login'),
+url(r'^$', login_forbidden(login), name='login'),
 url(r'^register/$', views.register, name='register'),
 url(r'^logout/$', logout, name='logout'),
 url(r'^afterLogin/$', views.afterLogin, name='afterLogin'),

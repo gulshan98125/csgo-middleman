@@ -203,7 +203,7 @@ io.on('connection', function (socket) {
     //Client is sending message through socket.io
     socket.on('send_skins', function (message) {
 
-       console.log("recieved message: "+ message);
+      // console.log("recieved message: "+ message);
 
        var itemsId_WithSteamId_and_RandomString = message.split(','); // Items array with array[0] as steamid
 
@@ -333,7 +333,6 @@ io.on('connection', function (socket) {
 
         var tradeRevertedUpdate_and_check = setInterval(function () {
         //send POST MESSAGE every 5 seconds TO update trade_reverted field
-
             form2 = {
                         'randomString': randomString,
                     }
