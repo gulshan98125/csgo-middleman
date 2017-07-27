@@ -73,7 +73,7 @@
       <li ><a href="https://steamcommunity.com/profiles/{{steamid}}" target="_blank"> <img src="{{profile_image_url_medium}}"> Steam Profile</a></li>
       <li><a href="#">Website Profile</a></li>
       <li><a href="{% url 'faq' %}">FAQ & Support</a></li>
-      <li><a href="{% url 'logout' %}?next=/login/">Logout</a></li>
+      <li><a href="{% url 'logout' %}?next=/">Logout</a></li>
     </ul>
   </nav>
 </div>
@@ -96,7 +96,7 @@ $('#toggle').click(function() {
 		form = {
             'tradeUrl': $('#tradeUrl').val(),
         }
-        $.post("http://139.59.67.203/updateTradeUrl/", form, function(result){
+        $.post("{{domain}}/updateTradeUrl/", form, function(result){
         	alert(result);
         });
 

@@ -5,7 +5,7 @@ from . import views
 
 urlpatterns = [
 url(r'^node_api$', views.node_api, name='node_api'),
-url(r'^login/$', login, name='login'),
+url(r'^$', login, name='login'),
 url(r'^register/$', views.register, name='register'),
 url(r'^logout/$', logout, name='logout'),
 url(r'^afterLogin/$', views.afterLogin, name='afterLogin'),
@@ -33,4 +33,5 @@ url(r'^isTradeReverted/$', views.isTradeReverted, name='isTradeReverted'),
 url(r'^updateTradeReverted/$', views.updateTradeReverted, name='updateTradeReverted'),
 url(r'^faq/$', views.faq, name='faq'),
 url(r'^updateTradeUrl/$', views.updateTradeUrl, name='updateTradeUrl'),
+url(r'^checkTradeUrl/$', views.checkTradeUrl, name='checkTradeUrl'),
 ]

@@ -1,4 +1,4 @@
-import urllib.request as urllib2
+import urllib.request as  urllib2
 import json
 from django.shortcuts import render
 import datetime
@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from steamauth import RedirectToSteamSignIn, GetSteamID64
+from django.conf import settings
 
 # Create your views here.
 @login_required
@@ -32,6 +33,18 @@ def updateTradeUrl(request):
         Profile_user_object.tradeUrl = request.POST.get('tradeUrl')
         Profile_user_object.save()
         return HttpResponse("successfully updated trade url")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@login_required
+@csrf_exempt
+def checkTradeUrl(request):
+    if request.method == "POST":
+        Profile_user_object = Profile.objects.get(user=request.user)
+        if Profile_user_object.tradeUrl is None:
+            return HttpResponse("error")
+        else:
+            return HttpResponse("success")
     else:
         return HttpResponse("error requested method doesn't exist")
 
@@ -93,7 +106,7 @@ def dashboard(request):
     'profile_image_url_medium': profile_image_url_medium,
     'profile_image_url_large': profile_image_url_large,
     'profile_image_url_small': profile_image_url_small,
-    }
+    'domain':settings.DOMAIN,}
     return render(request, 'account/dashboard.html', context)
 
 @login_required
@@ -216,8 +229,8 @@ def trade_page(request, rString):
         'tupleList': tupleList,
         'steamid': steam64id,
         'tradeUrl': tradeUrl,
-        }
-        return render(request, 'trade/tradepage_skins.html', context)
+        'domain':settings.DOMAIN}
+        return render(request, 'trade/tradepage_skins.html',context)
     
     elif createdUser == request.user.username and tradeObject.user_giving_money==request.user:
         #tradelink created by user giving money
@@ -230,7 +243,7 @@ def trade_page(request, rString):
         for oj in object:
             username = oj['personaname']
             profile_image_url_large = oj['avatarfull']
-        context = {'username':username,'randomString':rString,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
+        context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
         return render(request, 'trade/tradepage_money.html', context)
     else:
         if createdUser != request.user.username:
@@ -246,7 +259,7 @@ def trade_page(request, rString):
                 for oj in object:
                     username = oj['personaname']
                     profile_image_url_large = oj['avatarfull']
-                context = {'username':username,'randomString':rString,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
+                context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
                 return render(request, 'trade/tradepage_money.html', context)
             elif tradeObject.user_giving_skins is None or tradeObject.user_giving_skins==request.user:    
                 #when user came from tradelink created by money submitter
@@ -295,7 +308,7 @@ def trade_page(request, rString):
                 'tupleList': tupleList,
                 'steamid': steam64id,
                 'tradeUrl':tradeUrl,
-                }
+                'domain':settings.DOMAIN}
                 return render(request, 'trade/tradepage_skins.html', context)
 
 
@@ -430,5 +443,5 @@ def LoginProcess(request):
         'profile_image_url_medium': profile_image_url_medium,
         'profile_image_url_large': profile_image_url_large,
         'profile_image_url_small': profile_image_url_small,
-        }
+        'domain': settings.DOMAIN,}
     return render(request, 'account/dashboard.html', context)

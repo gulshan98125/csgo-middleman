@@ -173,7 +173,7 @@ function unselectAll() {
 	// SOCKET SENDING
 	$(document).ready(function(){
 
-      var socket = io.connect('http://139.59.67.203:3000/');
+      var socket = io.connect('{{domain}}:3000/');
       
       socket.on('connect', function(){
         console.log("connected");
@@ -206,7 +206,7 @@ function unselectAll() {
             'mobileNumber':$('#mobileNumber').val(),
             'expectedAmount': $('#expectedAmount').val(),
         }
-             $.post("http://139.59.67.203/submitNumberAndMoney/", form, function(result){
+             $.post("{{domain}}/submitNumberAndMoney/", form, function(result){
                   
                   if(result!="error"){
                      alert(result);
@@ -252,14 +252,26 @@ function unselectAll() {
 
 
 		if(msg){
-			console.log("message sent");
+	
+	form = {
+            'randomshit': ""
+        }	
+	$.post("{{domain}}/checkTradeUrl/", form, function(result){
+		
+		if(result != "error"){
+		console.log("message sent");
            socket.emit('send_skins', msg, function(data){
                 console.log(data);
            });
            $('#image').attr("src","https://media.giphy.com/media/3oKIPjbXj8FIL6eG3e/giphy.gif");
        document.getElementById('status').text = 'Trade Offer sent waiting';
             $('#image').show();
+		}
+		else{
+		document.getElementById('status').text = 'Error, update trade URL in the dashboard page';
+		}	
 
+		});
        }
 
 		})
@@ -286,7 +298,7 @@ function unselectAll() {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://139.59.67.203/isUser2connected/", form, function(result){
+             $.post("{{domain}}/isUser2connected/", form, function(result){
                   
                   if(result!="error"){
                     $("#postResponse").html(result);
@@ -303,7 +315,7 @@ function unselectAll() {
         form = {
             'randomString': $('#randomString').val()
         }
-             $.post("http://139.59.67.203/tradeStatus/", form, function(result){
+             $.post("{{domain}}/tradeStatus/", form, function(result){
                     if(result=="Trade Expired please create new"){
                       $("#full_status").text(result);
                       clearInterval(refreshIntervalId3);

@@ -49,7 +49,7 @@ function sendItems(itemsArray, partnerid, tradeUrl) {
             for(i=0; i<itemsArray.length; i++){
                      
                     const item = inventory.find((item) => item.assetid ==''+itemsArray[i]);
-                    console.log("got item number" + i);
+                    console.log("sending back item number" + i);
                     offer.addMyItem(item);    
                     
                     }
@@ -80,27 +80,21 @@ function depositItem(itemsArray, partnerid, tradeUrl) {
 
     manager.loadInventory(appid, contextid, true, (err, myInv) => {
         if (err) {
-            console.log("reached here 0");
             console.log(err);
         } else {
-            console.log("reached here 1");
             manager.loadUserInventory(partner, appid, contextid, true, (err, theirInv) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log("reached here 2");
                     for(i=0; i<itemsArray.length; i++){
                      
-                    const item = theirInv.find((item) => item.assetid ==''+itemsArray[i]);
-                    console.log("got item number" + i);
+                    var item = theirInv.find((item) => item.assetid ==''+itemsArray[i]);
+                    console.log("added item number" + i);
                     offer.addTheirItem(item);    
                     
                     }
 
-                    console.log("reached here 3");
-
                     offer.setMessage(`from csgomm.store`);
-                    console.log("reached here 4");
                     offer.send((err, status) => {
                         if (err) {
                             console.log(err);
@@ -173,9 +167,9 @@ io.on('connection', function (socket) {
         random_string = Array_With_namesPLUSimage_And_RandomString[1];
         var Array_skinsNamePlusImages = Array_With_namesPLUSimage_And_RandomString[0].split('$$$');
         skinsNames = Array_skinsNamePlusImages[0];
-        console.log("names of guns: "+ skinsNames);
+       // console.log("names of guns: "+ skinsNames);
         skinsImages = Array_skinsNamePlusImages[1];
-        console.log("image urls of guns: "+ skinsImages);
+       // console.log("image urls of guns: "+ skinsImages);
 
         if(Array_With_namesPLUSimage_And_RandomString.length>1){
 
@@ -187,7 +181,7 @@ io.on('connection', function (socket) {
                                         }
 
                                     var options = {
-                                            uri : 'http://139.59.67.203/submitSkinsNamesAndImages/',
+                                            uri : 'http://www.csgomm.store/submitSkinsNamesAndImages/',
                                             method : 'POST',
                                             form : form
                                         }
@@ -272,7 +266,7 @@ io.on('connection', function (socket) {
                                         }
 
                                     var options = {
-                                            uri : 'http://139.59.67.203/submitSkins/',
+                                            uri : 'http://www.csgomm.store/submitSkins/',
                                             method : 'POST',
                                             form : form
                                         }
@@ -281,7 +275,7 @@ io.on('connection', function (socket) {
                                 }
 
                                     var optionsP = {
-                                        uri : 'http://139.59.67.203/updateTradeCreatedTime/',
+                                        uri : 'http://www.csgomm.store/updateTradeCreatedTime/',
                                             method : 'POST',
                                             form : form2
                                     }
@@ -345,7 +339,7 @@ io.on('connection', function (socket) {
                     }
 
             var options2 = {
-                    uri : 'http://139.59.67.203/updateTradeReverted/',
+                    uri : 'http://www.csgomm.store/updateTradeReverted/',
                     method : 'POST',
                     form : form2
             }
@@ -360,7 +354,7 @@ io.on('connection', function (socket) {
                 })
 
            var options3 = {
-            uri : 'http://139.59.67.203/isTradeReverted/',
+            uri : 'http://www.csgomm.store/isTradeReverted/',
                     method : 'POST',
                     form : form2
            }
