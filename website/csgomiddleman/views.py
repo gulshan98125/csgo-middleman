@@ -124,9 +124,9 @@ def confirmMail(request):
     if(profile.confirm_email_token == token):
         profile.isConfirmed = True
         profile.save()
-        message.success(request,'Successfully confirmed')
+        messages.success(request,'Successfully confirmed')
     else:
-        message.warning(request,'Invalid Token')
+        messages.warning(request,'Invalid Token')
     return HttpResponseRedirect(reverse('login'))
 
 def register(request):
