@@ -23,7 +23,8 @@ from django.contrib.auth import login as auth_login
 # Create your views here.
 @login_required
 def afterLogin(request):
-    if Profile.objects.filter(user=request.user).exists():
+    profile = Profile.objects.filter(user=request.user)
+    if profile.steam_id is not None:
         return HttpResponseRedirect(reverse('dashboard'))
     else:
         return HttpResponseRedirect(reverse('steam_login_dashboard'))
@@ -485,11 +486,6 @@ def LoginProcess(request):
         # login failed
         return HttpResponse("ERROR! Login failed")
     else:
-        # login success
-        if Profile.objects.filter(user=request.user).exists():
-            print ("")
-        else:
-            Profile.objects.create(user = request.user,steam_id=steamid)
         Profile_user_object = Profile.objects.get(user=request.user)
         Profile_user_object.steam_id = steamid
         Profile_user_object.save()
