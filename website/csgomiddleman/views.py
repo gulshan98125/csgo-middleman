@@ -110,12 +110,12 @@ def registerPost(request):
         from_email = settings.EMAIL_HOST_USER
         to_list = [email]
         subject = "csgomm store confirmation"
-        message = "click on the link below to confirm\n"
-        message += '<a href="' + settings.DOMAIN + '/confirm_mail?user='+username+'&token='+randomString+'">Confirm Email address</a>'
+        message = "Hello "+ username +", you requested the email confirmation on csgomm.store. Click on the link below to confirm\n \n"
+        message += '' + settings.DOMAIN + '/confirm_mail?user='+username+'&token='+randomString+''
         print("sending mail")
         send_mail(subject, message, from_email, to_list, fail_silently=True)
         print("mail sent")
-        return HttpResponse("Email has been sent to you")
+        return HttpResponse("Confirmation Email has been sent to you")
 
 def confirmMail(request):
     username = request.GET.get('user')
@@ -125,9 +125,13 @@ def confirmMail(request):
     if(profile.confirm_email_token == token):
         profile.isConfirmed = True
         profile.save()
-        messages.success(request,'Successfully confirmed')
+        # messages.success(request,'Successfully confirmed')
+        html = '<!DOCTYPE html><html><head></head><body>Your email has been confirmed <a href="'+settings.DOMAIN+'">login here</a>/body></html>'
+        return HttpResponse(html)
     else:
-        messages.warning(request,'Invalid Token')
+        # messages.warning(request,'Invalid Token')
+        html2 = '<!DOCTYPE html><html><head></head><body> Error! Invalid token </body></html>'
+        return HttpResponse(html2)
     return HttpResponseRedirect(reverse('login'))
 
 def register(request):
