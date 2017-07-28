@@ -41,7 +41,7 @@ class Profile(models.Model):
 	phone_no = models.CharField(max_length=14, null=True)
 	tradeUrl = models.CharField(max_length=50, unique=True,  null=True)
 	isConfirmed = models.BooleanField(default=False)
-	
+	confirm_email_token = models.CharField(max_length=15, unique=True,  null=True)
 
 	# running_ad = models.ForeignKey(Ad, blank=True, null=True)
 

@@ -92,19 +92,40 @@ def registerPost(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+
+        if(password==confirm_password):
+            if(User.objects.filter(username=username).exists()):
+                return HttpResponse('Username Already exists')
+            if(User.objects.filter(email=email).exists()):
+                return HttpResponse('Email Already exists')
+            
+            user = User.objects.create(username=username, email=email, password=password)
+            randomString = get_random_string(length=15, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+            Profile.objects.create(user=user, confirm_email_token=randomString)
+        else:
+            return HttpResponse('Passwords dont match.')
         from_email = settings.EMAIL_HOST_USER
-        print("from email is:"+ from_email)
         to_list = [email]
-        print("to email is:"+email)
         subject = "csgomm store confirmation"
-        message = "click on the link below to confirm"
+        message = "click on the link below to confirm\n"
+        message += '<a href="' + settings.DOMAIN + '/confirm_mail?user='+username+'&token='+randomString+'">Confirm Email address</a>'
         print("sending mail")
-        #connection = get_connection(use_tls=True, host='smtp.gmail.com', port=587,username='gulshan98125@gmail.com', password='montyhanda1')
-        #msg = EmailMessage('Request Callback', message, to= to_list)
-        #msg.send()
         send_mail(subject, message, from_email, to_list, fail_silently=True)
         print("mail sent")
         return HttpResponse("Email has been sent to you")
+
+def confirmMail(request):
+    username = request.GET.get('user')
+    token = request.GET.get('token')
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    if(profile.confirm_email_token == token):
+        profile.isConfirmed = True
+        profile.save()
+        message.success(request,'Successfully confirmed')
+    else:
+        message.warning(request,'Invalid Token')
+    return HttpResponseRedirect(reverse('login'))
 
 def register(request):
     return render(request, 'registration/register.html')
