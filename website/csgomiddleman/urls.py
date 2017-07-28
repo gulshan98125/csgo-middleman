@@ -8,7 +8,7 @@ login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/dashboard/')
 
 urlpatterns = [
 url(r'^node_api$', views.node_api, name='node_api'),
-url(r'^$', login_forbidden(login), name='login'),
+url(r'^$', login_forbidden(views.login), name='login'),
 url(r'^register/$', views.register, name='register'),
 url(r'^registerPost/$', views.registerPost, name='registerPost'),
 url(r'^logout/$', logout, name='logout'),

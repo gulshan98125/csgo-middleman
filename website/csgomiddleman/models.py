@@ -40,6 +40,7 @@ class Profile(models.Model):
 	steam_id = models.CharField(max_length=50, unique=True,  null=True)
 	phone_no = models.CharField(max_length=14, null=True)
 	tradeUrl = models.CharField(max_length=50, unique=True,  null=True)
+	isConfirmed = models.BooleanField(default=False)
 	
 
 	# running_ad = models.ForeignKey(Ad, blank=True, null=True)

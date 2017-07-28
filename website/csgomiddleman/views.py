@@ -18,6 +18,7 @@ from steamauth import RedirectToSteamSignIn, GetSteamID64
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage, get_connection
 from django.contrib import messages
+from django.contrib.auth import login as auth_login
 
 # Create your views here.
 @login_required
@@ -107,6 +108,23 @@ def registerPost(request):
 
 def register(request):
     return render(request, 'registration/register.html')
+
+def login(request):
+    if(request.method == 'POST'):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if(user is not None):
+            profile = Profile.objects.get(user=user)
+            if(profile.isConfirmed==True):
+                auth_login(request, user)
+                return HttpResponseRedirect(reverse('afterLogin'))
+            else:
+                return HttpResponse('Confirmation pending')
+        else:
+            return HttpResponse('Invalid Username/password')
+    else:
+        return render(request, 'registration/login.html')
 
 @login_required
 def dashboard(request):
