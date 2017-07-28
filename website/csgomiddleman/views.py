@@ -99,7 +99,9 @@ def registerPost(request):
             if(User.objects.filter(email=email).exists()):
                 return HttpResponse('Email Already exists')
             
-            user = User.objects.create(username=username, email=email, password=password)
+            user = User(username=username, email=email)
+            user.set_password(password)
+            user.save()
             randomString = get_random_string(length=15, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
             Profile.objects.create(user=user, confirm_email_token=randomString)
         else:
@@ -134,6 +136,8 @@ def login(request):
     if(request.method == 'POST'):
         username = request.POST.get('username')
         password = request.POST.get('password')
+        print(username)
+        print(password)
         user = authenticate(username=username, password=password)
         if(user is not None):
             profile = Profile.objects.get(user=user)
