@@ -16,8 +16,6 @@ from django.contrib.auth.decorators import login_required
 from django.utils.crypto import get_random_string
 from steamauth import RedirectToSteamSignIn, GetSteamID64
 from django.conf import settings
-from django.core.mail import send_mail, EmailMessage, get_connection
-from django.contrib import messages
 
 # Create your views here.
 @login_required
@@ -85,27 +83,12 @@ def node_api(request):
     else:
         return HttpResponse("error :(")
 
-def registerPost(request):
+def register(request):
     if(request.method=='POST'):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
-        from_email = settings.EMAIL_HOST_USER
-        print("from email is:"+ from_email)
-        to_list = [email]
-        print("to email is:"+email)
-        subject = "csgomm store confirmation"
-        message = "click on the link below to confirm"
-        print("sending mail")
-        #connection = get_connection(use_tls=True, host='smtp.gmail.com', port=587,username='gulshan98125@gmail.com', password='montyhanda1')
-        #msg = EmailMessage('Request Callback', message, to= to_list)
-        #msg.send()
-        send_mail(subject, message, from_email, to_list, fail_silently=True)
-        print("mail sent")
-        return HttpResponse("Email has been sent to you")
-
-def register(request):
     return render(request, 'registration/register.html')
 
 @login_required

@@ -10,6 +10,7 @@ urlpatterns = [
 url(r'^node_api$', views.node_api, name='node_api'),
 url(r'^$', login_forbidden(login), name='login'),
 url(r'^register/$', views.register, name='register'),
+url(r'^registerPost/$', views.registerPost, name='registerPost'),
 url(r'^logout/$', logout, name='logout'),
 url(r'^afterLogin/$', views.afterLogin, name='afterLogin'),
 url(r'^dashboard/$', views.dashboard, name='dashboard'),
