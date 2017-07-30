@@ -46,7 +46,7 @@ def acceptTradedSkins(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
         if tradeObject.user_giving_money == request.user:
-            tradeObject.trade_accepted_by_user_giving_money = false
+            tradeObject.trade_accepted_by_user_giving_money = True
             tradeObject.save()
             return HttpResponse(tradeObject.mobileNumber + ";" +tradeObject.expectedAmount)
         else:
