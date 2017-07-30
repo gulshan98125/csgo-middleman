@@ -56,6 +56,21 @@ def acceptTradedSkins(request):
 
 @login_required
 @csrf_exempt
+def sentMoney(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_money == request.user:
+            tradeObject.money_submitted = "true"
+            tradeObject.money_received_accepted_by_user_giving_money = True
+            tradeObject.save()
+            return HttpResponse('success')
+        else:
+            return HttpResponse("error invalid user")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@login_required
+@csrf_exempt
 def checkTradeUrl(request):
     if request.method == "POST":
         Profile_user_object = Profile.objects.get(user=request.user)
@@ -403,14 +418,21 @@ def tradeStatus(request):
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
         if tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "false":
             return HttpResponse("waiting for skins/keys")
+        
         elif tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "true":
             return HttpResponse("Money submitted not the skins")
+        
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
-            return HttpResponse("Skins submitted waiting for money")
+            if tradeObject.trade_accepted_by_user_giving_money = True:
+                return HttpResponse("user accepted submitted skins, waiting for his money sending")
+            else:
+                return HttpResponse("Skins submitted waiting for money")
+        
         elif tradeObject.skins_submitted == "0":
             return HttpResponse("Trade Expired please create new")
+        
         else:
-            return HttpResponse("Skins and Money Both submitted")
+            return HttpResponse("Skins depositor has sent the money")
     else:
         return HttpResponse("error requested method doesn't exist")
 

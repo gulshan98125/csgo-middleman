@@ -40,4 +40,5 @@ url(r'^faq/$', views.faq, name='faq'),
 url(r'^updateTradeUrl/$', views.updateTradeUrl, name='updateTradeUrl'),
 url(r'^checkTradeUrl/$', views.checkTradeUrl, name='checkTradeUrl'),
 url(r'^acceptTradedSkins/$', views.acceptTradedSkins, name='acceptTradedSkins'),
+url(r'^sentMoney/$', views.sentMoney, name='sentMoney'),
 ]
