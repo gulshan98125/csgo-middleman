@@ -121,7 +121,8 @@ a {
 
 	<div class="container2 text-center" style="margin-left: 31vw; margin-top: 2vh">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style=" font-size:1.6vw; color:yellow"> {{username}} </div>	
-		
+	<br> <br> <div style="color:white" class="text-center">Paytm option will be available when the other user submits the skins </div>
+	<br> <div style="display: none; color:white" id="paytmOption" class="text-center"><a href="#" style="color:yellow"> Pay with Paytm </a> </div>	
 
 		</div>
 	</div>
@@ -156,7 +157,13 @@ a {
     var modal = document.getElementById('myModal');
     
    
-
+	$('#accept').click(function(){
+      			$('#myModal').hide();
+		      	$('#paytmOption').show();
+    		});
+	$('#reject').click(function(){
+      		$('#myModal').hide();
+	    });
 
     var refreshIntervalId = setInterval(function () {
         form = {

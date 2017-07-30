@@ -111,7 +111,8 @@ def registerPost(request):
         to_list = [email]
         subject = "csgomm store confirmation"
         message = "Hello "+ username +", you requested the email confirmation on csgomm.store. Click on the link below to confirm\n \n"
-        message += '' + settings.DOMAIN + '/confirm_mail?user='+username+'&token='+randomString+''
+        message += '' + settings.DOMAIN + '/confirm_mail?user='+username+'&token='+randomString+'\n'
+        message += 'If it is not done by you then ignore this mail.'
         print("sending mail")
         send_mail(subject, message, from_email, to_list, fail_silently=True)
         print("mail sent")
@@ -126,7 +127,7 @@ def confirmMail(request):
         profile.isConfirmed = True
         profile.save()
         # messages.success(request,'Successfully confirmed')
-        html = '<!DOCTYPE html><html><head></head><body>Your email has been confirmed <a href="'+settings.DOMAIN+'">login here</a>/body></html>'
+        html = '<!DOCTYPE html><html><head></head><body>Your email has been confirmed <a href="'+settings.DOMAIN+'">login here</a></body></html>'
         return HttpResponse(html)
     else:
         # messages.warning(request,'Invalid Token')
@@ -141,8 +142,6 @@ def login(request):
     if(request.method == 'POST'):
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(username)
-        print(password)
         user = authenticate(username=username, password=password)
         if(user is not None):
             profile = Profile.objects.get(user=user)
@@ -150,7 +149,7 @@ def login(request):
                 auth_login(request, user)
                 return HttpResponseRedirect(reverse('afterLogin'))
             else:
-                return HttpResponse('Confirmation pending')
+                return HttpResponse('Email Confirmation pending')
         else:
             return HttpResponse('Invalid Username/password')
     else:
