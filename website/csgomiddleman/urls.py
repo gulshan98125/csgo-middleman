@@ -39,4 +39,5 @@ url(r'^updateTradeReverted/$', views.updateTradeReverted, name='updateTradeRever
 url(r'^faq/$', views.faq, name='faq'),
 url(r'^updateTradeUrl/$', views.updateTradeUrl, name='updateTradeUrl'),
 url(r'^checkTradeUrl/$', views.checkTradeUrl, name='checkTradeUrl'),
+url(r'^acceptTradedSkins/$', views.acceptTradedSkins, name='acceptTradedSkins'),
 ]
