@@ -122,7 +122,14 @@ a {
 	<div class="container2 text-center" style="margin-left: 31vw; margin-top: 2vh">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style=" font-size:1.6vw; color:yellow"> {{username}} </div>	
 	<br> <br> <div style="color:white" class="text-center">Paytm option will be available when the other user submits the skins </div>
-	<br> <div style="display: none; color:white" id="paytmOption" class="text-center"><a href="#" style="color:yellow"> Pay with Paytm </a> </div>	
+	<br> 
+  <div style="display: none; color:white" id="paytmOption" class="text-center"> 
+
+  Send Paytm <a id="amountToSend"> </a> to this number: <a id="mobileNumberToSend"> </a> <br>
+
+  After you have sent the paytm click on this button: <button class="btn btn-success" id = "sentPaytm"> I have sent the paytm </button>
+
+  </div>	
 
 		</div>
 	</div>
@@ -158,8 +165,25 @@ a {
     
    
 	$('#accept').click(function(){
-      			$('#myModal').hide();
-		      	$('#paytmOption').show();
+
+          form = {
+            'randomString': $('#randomString').val()
+              }
+
+              $.post("{{domain}}/acceptTradedSkins/", form, function(result){
+                if(result!=="error invalid user"){
+
+                  var array_mobilNumber_Plus_money = result.split(';')
+
+                  $("#amountToSend").text(array_mobilNumber_Plus_money[0]);}
+                  $("#mobileNumberToSend").text(array_mobilNumber_Plus_money[1]);}
+                  $('#myModal').hide();
+                  $('#paytmOption').show();
+                }
+
+                });
+
+      			
     		});
 	$('#reject').click(function(){
       		$('#myModal').hide();

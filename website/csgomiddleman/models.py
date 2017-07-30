@@ -8,23 +8,28 @@ class trade(models.Model):
 	user_giving_skins = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='trades_skins', null=True, blank=True)
 	user_giving_money = models.ForeignKey(settings.AUTH_USER_MODEL, null=True , related_name='trades_money', blank=True)
 	skins_assetids = models.TextField(null=True)
-	amount_submitted = models.CharField(max_length=50,null=True)
 	#trade status= money submitted/trade submitted/Complete sending respective items/nothing submitted
 	skins_submitted = models.CharField(max_length=10,null=True)
-	#image for skins
+	#images of skins
 	skins_submitted_icons = models.TextField(null=True)
-	#name for skins
+	#names of skins
 	skins_submitted_name = models.TextField(null=True)
 	#money submitted is the amount of money submitted
 	trade_reverted = models.CharField(max_length=10,null=True)
 	time_posted = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-	money_reverted = models.CharField(max_length=10,null=True)
-	money_submitted = models.CharField(max_length=10,null=True)
 	random_string = models.CharField(max_length=100, unique=True) 
 	created_by = models.CharField(max_length=100)
 	mobileNumber = models.CharField(max_length=10, null=True)
 	expectedAmount = models.CharField(max_length=10, null=True)
+	
+	trade_accepted_by_user_giving_money = models.BooleanField(default=False)
+	
+	money_received_accepted_by_user_giving_skins = models.BooleanField(default=False)
+	money_received_accepted_by_user_giving_money = models.BooleanField(default=False)
+
+	trade_cancel_accepted_by_user_giving_skins = models.BooleanField(default=False)
+	trade_cancel_accepted_by_user_giving_money = models.BooleanField(default=False)
 
 	def __str__(self):
 		if self.user_giving_skins is None:

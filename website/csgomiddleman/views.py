@@ -42,6 +42,20 @@ def updateTradeUrl(request):
 
 @login_required
 @csrf_exempt
+def acceptTradedSkins(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_money == request.user:
+            tradeObject.trade_accepted_by_user_giving_money = false
+            tradeObject.save()
+            return HttpResponse(tradeObject.mobileNumber + ";" +tradeObject.expectedAmount)
+        else:
+            return HttpResponse("error invalid user")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@login_required
+@csrf_exempt
 def checkTradeUrl(request):
     if request.method == "POST":
         Profile_user_object = Profile.objects.get(user=request.user)
@@ -184,13 +198,13 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade_skins(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false")
+    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false", money_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
 def create_random_trade_paytm(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", amount_submitted="0", trade_reverted="false", money_reverted="false")
+    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false", money_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @csrf_exempt
@@ -215,9 +229,8 @@ def submitNumberAndMoney(request):
             if len(request.POST.get('mobileNumber')) == 10 and len(request.POST.get('expectedAmount')) > 0:
                 tradeObject.mobileNumber = request.POST.get('mobileNumber')
                 amountInFloat = float(request.POST.get('expectedAmount'))
-                amountAfterCut = amountInFloat + (amountInFloat*0.0069)
                 # FinalamountInInt = int(amountAfterCut)
-                tradeObject.expectedAmount = str(amountAfterCut)
+                tradeObject.expectedAmount = str(amountInFloat)
                 tradeObject.save()
                 return HttpResponse("successfully updated")
             else:
