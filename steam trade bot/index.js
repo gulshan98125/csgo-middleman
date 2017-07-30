@@ -48,7 +48,7 @@ function sendItems(itemsArray, partnerid, tradeUrl) {
             const offer = manager.createOffer(tradeUrl);
             for(i=0; i<itemsArray.length; i++){
                      
-                    const item = inventory.find((item) => item.assetid ==''+itemsArray[i]);
+                    var item = inventory.find((item) => item.assetid ==''+itemsArray[i]);
                     console.log("sending back item number" + i);
                     offer.addMyItem(item);    
                     

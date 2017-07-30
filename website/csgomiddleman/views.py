@@ -423,7 +423,7 @@ def tradeStatus(request):
             return HttpResponse("Money submitted not the skins")
         
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
-            if tradeObject.trade_accepted_by_user_giving_money = True:
+            if tradeObject.trade_accepted_by_user_giving_money == True:
                 return HttpResponse("user accepted submitted skins, waiting for his money sending")
             else:
                 return HttpResponse("Skins submitted waiting for money")
