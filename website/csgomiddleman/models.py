@@ -10,6 +10,7 @@ class trade(models.Model):
 	skins_assetids = models.TextField(null=True)
 	#trade status= money submitted/trade submitted/Complete sending respective items/nothing submitted
 	skins_submitted = models.CharField(max_length=10,null=True)
+	money_submitted = models.CharField(max_length=10,null=True)
 	#images of skins
 	skins_submitted_icons = models.TextField(null=True)
 	#names of skins

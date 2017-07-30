@@ -198,13 +198,13 @@ def steam_login_dashboard(request):
 @login_required
 def create_random_trade_skins(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false", money_reverted="false")
+    trade.objects.create(user_giving_skins=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @login_required
 def create_random_trade_paytm(request):
     randomString = get_random_string(length=8, allowed_chars=u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false", money_reverted="false")
+    trade.objects.create(user_giving_money=request.user, random_string=randomString, created_by=request.user, money_submitted="false",skins_submitted="false", trade_reverted="false")
     return HttpResponseRedirect(reverse('trade_page', kwargs={'rString':randomString}))
 
 @csrf_exempt
