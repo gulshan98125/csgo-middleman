@@ -137,6 +137,13 @@ max-height:100%;
     
     <div class="text-center" id="postResponse" style="margin-top: 30vh;color: yellow; font-size: 1.5vw"> checking/waiting for other user...
     <img src="https://media.giphy.com/media/xUOrwl2xwnTYnKzlpS/giphy.gif">
+     
+    <br>
+    <br>
+    When you receive the money, please click on the button below: <br>
+    <button class="btn btn-primary" id="receivedMoney">Yes I recieved the money</button>
+
+
      </div>
 
 		</div>
@@ -182,6 +189,19 @@ function unselectAll() {
       $('#submit_skin_enable_button').click(function(){
 			$('#inventorylist').toggle();
 		})
+
+      $('#receivedMoney').click(function(){
+    
+        form = {
+            'randomString': $('#randomString').val()
+        }
+        $.post("{{domain}}/receivedMoney/", form, function(result){
+              if(result=="success"){
+                $('#receivedMoney').hide();
+              }
+          });
+
+    })
 		
 
 

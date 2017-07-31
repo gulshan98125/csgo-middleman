@@ -69,6 +69,20 @@ def sentMoney(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
+@login_required
+@csrf_exempt
+def receivedMoney(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_skins == request.user:
+            tradeObject.money_received_accepted_by_user_giving_skins = True
+            tradeObject.save()
+            return HttpResponse('success')
+        else:
+            return HttpResponse("error invalid user")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 
 @login_required
 @csrf_exempt
@@ -283,6 +297,9 @@ def updateTradeReverted(request):
             tradeObject.skins_submitted = "0"
             tradeObject.save()
             return HttpResponse("success trade_reverted changed")
+        elif:
+            timediff_inSeconds > 1200 and tradeObject.money_received_accepted_by_user_giving_skins==False:
+            return HttpResponse("Attempted trade scam")
         else:
             return HttpResponse("no change made to trade_reverted")
     else:
@@ -448,7 +465,9 @@ def tradeStatus(request):
             return HttpResponse("Trade Expired please create new")
         
         else:
-            return HttpResponse("Skins depositor has sent the money")
+            if tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True:
+                return HttpResponse("Both parties have agreed, sending skins to the other user")
+            return HttpResponse("Money depositor has sent the money")
     else:
         return HttpResponse("error requested method doesn't exist")
 
