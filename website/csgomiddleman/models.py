@@ -34,8 +34,8 @@ class trade(models.Model):
 	trade_cancel_accepted_by_user_giving_skins = models.BooleanField(default=False)
 	trade_cancel_accepted_by_user_giving_money = models.BooleanField(default=False)
 
-	user_getting_skins_tradeUrl = models.CharField(max_length=100, unique=True, null=True) 
-	user_getting_skins_steamId = models.CharField(max_length=50, unique=True, null=True) 
+	user_getting_skins_tradeUrl = models.CharField(max_length=100, null=True) 
+	user_getting_skins_steamId = models.CharField(max_length=50, null=True) 
 
 	def __str__(self):
 		if self.user_giving_skins is None:

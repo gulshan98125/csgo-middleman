@@ -347,7 +347,7 @@ io.on('connection', function (socket) {
 
 
                   if (!error && response.statusCode == 200) {
-                     if(response=="Attempted trade scam"){
+                     if(body=="Attempted trade scam"){
                         //Stop the trade and inform about scam
                      }
                   }
@@ -386,7 +386,7 @@ io.on('connection', function (socket) {
     }, 10000);    
 
 
-
+	console.log("checking whether trade is completed or not ");
         var tradeStatusCompletedCheck = setInterval(function () {
 
             form5 = {
@@ -399,9 +399,11 @@ io.on('connection', function (socket) {
                     form : form5
             }
 
-            request(optionsN, function (error, response, body) {
-
-                if(response=="true"){
+            request(optionsN, function (errorN, responseN, bodyN) {
+		console.log("checking whether trade is accepted by both");
+		
+                if(bodyN=="true"){
+		console.log("trade is accepted by both parties");		
 
                     var optionsP = {
                     uri : 'http://www.csgomm.store/tradeUrl_Steamid_AndAssetIds/',
@@ -410,8 +412,9 @@ io.on('connection', function (socket) {
             }
 
                     request(optionsP, function (error2, response2, body2) {
+			console.log("Sending the trade to the other user");
 
-                        var array_assetidsAndtradeUrl_Plus_steamid = response2.split('&&&');
+                        var array_assetidsAndtradeUrl_Plus_steamid = body2.split('&&&');
                         steamdIdofTheUser = array_assetidsAndtradeUrl_Plus_steamid[1]
                         var array_assetids_PLUS_tradeUrl = array_assetidsAndtradeUrl_Plus_steamid[0].split(';;;');
                         stringOfAssetIds = array_assetids_PLUS_tradeUrl[0];
