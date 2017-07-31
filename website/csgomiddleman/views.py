@@ -297,8 +297,7 @@ def updateTradeReverted(request):
             tradeObject.skins_submitted = "0"
             tradeObject.save()
             return HttpResponse("success trade_reverted changed")
-        elif:
-            timediff_inSeconds > 1200 and tradeObject.money_received_accepted_by_user_giving_skins==False:
+        elif timediff_inSeconds > 1200 and tradeObject.money_received_accepted_by_user_giving_skins==False:
             return HttpResponse("Attempted trade scam")
         else:
             return HttpResponse("no change made to trade_reverted")

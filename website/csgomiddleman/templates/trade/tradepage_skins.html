@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<DOCTYPE html>
 <html>
 <head>
 {% load static from staticfiles %}
@@ -134,18 +134,21 @@ max-height:100%;
     </div>
     <div class="col-xs-3" style="height: 100%;  background-color:   #488a99; border-style: solid; border-width: 2px; border-color: black;">
 
-    
-    <div class="text-center" id="postResponse" style="margin-top: 30vh;color: yellow; font-size: 1.5vw"> checking/waiting for other user...
+    <div class="row" style="height: 50%">
+    <div class="text-center" id="postResponse" style="margin-top: 10vh;color: yellow; font-size: 1.5vw"> checking/waiting for other user...
     <img src="https://media.giphy.com/media/xUOrwl2xwnTYnKzlpS/giphy.gif">
      
     <br>
     <br>
-    When you receive the money, please click on the button below: <br>
-    <button class="btn btn-primary" id="receivedMoney">Yes I recieved the money</button>
 
 
      </div>
+     </div>
 
+     <div class="row" style="width: 90%; margin-left: 1.5vw"> 
+     <a style="color:red; font-size: 1.5vw"> When you receive the money, please click on the button below: </a> <br>
+    <button class="btn btn-primary" id="receivedMoney">Yes I recieved the money</button>
+     </div>
 		</div>
 	</div>
 
@@ -356,3 +359,5 @@ function unselectAll() {
 </script>
 </body>
 </html>
+
+
