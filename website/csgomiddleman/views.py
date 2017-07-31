@@ -123,15 +123,6 @@ def updateTradeCreatedTime(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
-@csrf_exempt
-def finishTrade(request):
-    if request.method == "POST":
-        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
-        tradeObject.trade_finished = True
-        tradeObject.save()
-    else:
-        return HttpResponse("error requested method doesn't exist")
-
 @login_required
 def faq(request):
     return render(request, 'questions/faq.html')
@@ -394,9 +385,9 @@ def trade_page(request, rString):
         if tradeUrl is not None:
             Profile_user_object = Profile.objects.get(user=request.user)
             steam64id = Profile_user_object.steam_id
-            Profile_user_object.user_getting_skins_tradeUrl = tradeUrl
-            Profile_user_object.user_getting_skins_steamId = steam64id
-            Profile_user_object.save()
+            tradeObject.user_getting_skins_tradeUrl = tradeUrl
+            tradeObject.user_getting_skins_steamId = steam64id
+            tradeObject.save()
             response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
             data = json.loads(response.read().decode('utf-8'))
             for jo in data:
@@ -412,12 +403,13 @@ def trade_page(request, rString):
         if createdUser != request.user.username:
             if tradeUrl is not None:
                 if tradeObject.user_giving_money is None or tradeObject.user_giving_money==request.user:
-                    tradeObject.user_giving_money = request.user
-                    tradeObject.save()
                     Profile_user_object = Profile.objects.get(user=request.user)
-                    Profile_user_object.user_getting_skins_tradeUrl = tradeUrl
+                    tradeObject.user_giving_money = request.user
+                    tradeObject.user_getting_skins_tradeUrl = tradeUrl
+                    tradeObject.save()
                     steam64id = Profile_user_object.steam_id
-                    Profile_user_object.user_getting_skins_steamId = steam64id
+                    tradeObject.user_getting_skins_steamId = steam64id
+                    tradeObject.save()
                     response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
                     data = json.loads(response.read().decode('utf-8'))
                     for jo in data:
@@ -507,7 +499,8 @@ def tradeStatus(request):
             if tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True and tradeObject.trade_finished == False:
                 return HttpResponse("Both parties have agreed, sending skins to the other user")
             elif tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True and tradeObject.trade_finished == True:
-            return HttpResponse("Trade completed, Thank you!")
+                return HttpResponse("Trade completed, Thank you!")
+            return HttpResponse("Money depositor has sent the money")
     else:
         return HttpResponse("error requested method doesn't exist")
 
