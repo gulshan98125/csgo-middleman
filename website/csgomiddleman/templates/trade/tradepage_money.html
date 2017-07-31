@@ -121,13 +121,13 @@ a {
 
 	<div class="container2 text-center" style="margin-left: 31vw; margin-top: 2vh">	<img src = "{{profile_image_url_large}}"> </div>
 						<div class="text-center" style=" font-size:1.6vw; color:yellow"> {{username}} </div>	
-	<br> <br> <div style="color:white" class="text-center">Paytm option will be available when the other user submits the skins </div>
+	<br> <br> <div id ="tempDiv" style="color:white" class="text-center">Money option will be available when the other user submits the skins </div>
 	<br> 
   <div style="display: none; color:white" id="paytmOption" class="text-center"> 
 
-  Send Paytm <a id="amountToSend"> </a> to this number: <a id="mobileNumberToSend"> </a> <br>
+  Send Paytm <a style="color:white" id="amountToSend"> </a> to this number: <a style="color:white" id="mobileNumberToSend"> </a> <br>
 
-  After you have sent the paytm click on this button: <button class="btn btn-success" id = "sentPaytm"> I have sent the paytm </button>
+  After you have sent the paytm click on this button: <button class="btn btn-success" id = "sentMoney"> I have sent the paytm </button>
 
   </div>	
 
@@ -175,9 +175,10 @@ a {
 
                   var array_mobilNumber_Plus_money = result.split(';')
 
-                  $("#amountToSend").text(array_mobilNumber_Plus_money[0]);
-                  $("#mobileNumberToSend").text(array_mobilNumber_Plus_money[1]);
+                  $("#amountToSend").text(array_mobilNumber_Plus_money[1]);
+                  $("#mobileNumberToSend").text(array_mobilNumber_Plus_money[0]);
                   $('#myModal').hide();
+                  $('#tempDiv').hide();
                   $('#paytmOption').show();
                 }
 
@@ -185,6 +186,25 @@ a {
 
       			
     		});
+
+
+  $('#sentMoney').click(function(){
+          
+          form = {
+                'randomString': $('#randomString').val()
+            }
+
+          $.post("{{domain}}/sentMoney/", form, function(result){
+                  if(result=="success"){
+    Add a comment to this line
+                    $('#sentMoney').hide();
+                  }
+              });
+
+        });
+
+
+
 	$('#reject').click(function(){
       		$('#myModal').hide();
 	    });
@@ -265,7 +285,34 @@ a {
                     }
 
                     else{
-                      if(result=="Trade Expired please create new"){
+
+                      if(result=="user accepted submitted skins, waiting for his money sending"){
+
+                        form = {
+                            'randomString': $('#randomString').val()
+                            }
+
+                            $.post("{{domain}}/acceptTradedSkins/", form, function(result){
+                              if(result!=="error invalid user"){
+
+                                var array_mobilNumber_Plus_money = result.split(';')
+
+                                $("#amountToSend").text(array_mobilNumber_Plus_money[1]);
+                                $("#mobileNumberToSend").text(array_mobilNumber_Plus_money[0]);
+                                $('#paytmOption').show();
+
+                                clearInterval(refreshIntervalId2);
+                                Replay();
+                              }
+
+                              });
+                              
+
+                      }
+
+
+
+                      else if(result=="Trade Expired please create new"){
                       $("#full_status").text(result);
                       clearInterval(refreshIntervalId2);
                     }

@@ -69,6 +69,22 @@ def sentMoney(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
+
+@login_required
+@csrf_exempt
+def sentMoney(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_money == request.user:
+            tradeObject.money_submitted = "true"
+            tradeObject.money_received_accepted_by_user_giving_money = True
+            tradeObject.save()
+            return HttpResponse('success')
+        else:
+            return HttpResponse("error invalid user")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 @login_required
 @csrf_exempt
 def checkTradeUrl(request):
