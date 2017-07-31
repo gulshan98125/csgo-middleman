@@ -284,6 +284,15 @@ def tradeUrl_Steamid_AndAssetIds(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
+@csrf_exempt
+def finishTrade(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        tradeObject.trade_finished = True
+        tradeObject.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
 @login_required
