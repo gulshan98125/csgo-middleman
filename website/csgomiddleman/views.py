@@ -123,6 +123,15 @@ def updateTradeCreatedTime(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
+@csrf_exempt
+def finishTrade(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        tradeObject.trade_finished = True
+        tradeObject.save()
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 @login_required
 def faq(request):
     return render(request, 'questions/faq.html')
@@ -266,6 +275,26 @@ def isTradeReverted(request):
         return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
+def isTradeCompleted(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True:
+            return HttpResponse("true")
+        else:
+            return HttpResponse("false")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
+def tradeUrl_Steamid_AndAssetIds(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.skins_assetids +";;;"+ tradeObject.user_getting_skins_tradeUrl + "&&&" + tradeObject.user_getting_skins_steamId)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+
+@csrf_exempt
 @login_required
 def submitNumberAndMoney(request):
     if request.method == "POST":
@@ -362,82 +391,93 @@ def trade_page(request, rString):
     
     elif createdUser == request.user.username and tradeObject.user_giving_money==request.user:
         #tradelink created by user giving money
-        Profile_user_object = Profile.objects.get(user=request.user)
-        steam64id = Profile_user_object.steam_id
-        response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-        data = json.loads(response.read().decode('utf-8'))
-        for jo in data:
-            object = data[jo]['players']
-        for oj in object:
-            username = oj['personaname']
-            profile_image_url_large = oj['avatarfull']
-        context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
-        return render(request, 'trade/tradepage_money.html', context)
+        if tradeUrl is not None:
+            Profile_user_object = Profile.objects.get(user=request.user)
+            steam64id = Profile_user_object.steam_id
+            Profile_user_object.user_getting_skins_tradeUrl = tradeUrl
+            Profile_user_object.user_getting_skins_steamId = steam64id
+            Profile_user_object.save()
+            response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
+            data = json.loads(response.read().decode('utf-8'))
+            for jo in data:
+                object = data[jo]['players']
+            for oj in object:
+                username = oj['personaname']
+                profile_image_url_large = oj['avatarfull']
+            context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
+            return render(request, 'trade/tradepage_money.html', context)
+        else:
+            return HttpResponse('Please update tradlink first in the dashboard page')
     else:
         if createdUser != request.user.username:
-            if tradeObject.user_giving_money is None or tradeObject.user_giving_money==request.user:
-                tradeObject.user_giving_money = request.user
-                tradeObject.save()
-                Profile_user_object = Profile.objects.get(user=request.user)
-                steam64id = Profile_user_object.steam_id
-                response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-                data = json.loads(response.read().decode('utf-8'))
-                for jo in data:
-                    object = data[jo]['players']
-                for oj in object:
-                    username = oj['personaname']
-                    profile_image_url_large = oj['avatarfull']
-                context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
-                return render(request, 'trade/tradepage_money.html', context)
-            elif tradeObject.user_giving_skins is None or tradeObject.user_giving_skins==request.user:    
-                #when user came from tradelink created by money submitter
-                tradeObject.user_giving_skins = request.user
-                tradeObject.save()
-                Profile_user_object = Profile.objects.get(user=request.user)
-                steam64id = Profile_user_object.steam_id
-                response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
-                data = json.loads(response.read().decode('utf-8'))
-                for jo in data:
-                    object = data[jo]['players']
-                for oj in object:
-                    username = oj['personaname']
-                    profile_image_url_large = oj['avatarfull']
-                    profile_image_url_small = oj['avatar']
-                    profile_image_url_medium = oj['avatarmedium']
-                response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
-                data2 = json.loads(response2.read().decode('utf-8'))
-                DictListofitems = data2['descriptions']
-                guns_icon_list = []
-                itemsToSkipList= []
-                itemslistNew = []
-                new_guns_icon_list = []
+            if tradeUrl is not None:
+                if tradeObject.user_giving_money is None or tradeObject.user_giving_money==request.user:
+                    tradeObject.user_giving_money = request.user
+                    tradeObject.save()
+                    Profile_user_object = Profile.objects.get(user=request.user)
+                    Profile_user_object.user_getting_skins_tradeUrl = tradeUrl
+                    steam64id = Profile_user_object.steam_id
+                    Profile_user_object.user_getting_skins_steamId = steam64id
+                    response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
+                    data = json.loads(response.read().decode('utf-8'))
+                    for jo in data:
+                        object = data[jo]['players']
+                    for oj in object:
+                        username = oj['personaname']
+                        profile_image_url_large = oj['avatarfull']
+                    context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
+                    return render(request, 'trade/tradepage_money.html', context)
+                elif tradeObject.user_giving_skins is None or tradeObject.user_giving_skins==request.user:    
+                    #when user came from tradelink created by money submitter
+                    tradeObject.user_giving_skins = request.user
+                    tradeObject.save()
+                    Profile_user_object = Profile.objects.get(user=request.user)
+                    steam64id = Profile_user_object.steam_id
+                    response = urllib2.urlopen('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=7EC66869C567554434C440CFAD2BCEDB&steamids='+steam64id)
+                    data = json.loads(response.read().decode('utf-8'))
+                    for jo in data:
+                        object = data[jo]['players']
+                    for oj in object:
+                        username = oj['personaname']
+                        profile_image_url_large = oj['avatarfull']
+                        profile_image_url_small = oj['avatar']
+                        profile_image_url_medium = oj['avatarmedium']
+                    response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
+                    data2 = json.loads(response2.read().decode('utf-8'))
+                    DictListofitems = data2['descriptions']
+                    guns_icon_list = []
+                    itemsToSkipList= []
+                    itemslistNew = []
+                    new_guns_icon_list = []
 
-                Dictidofitems = data2['assets']
-                idList =[]
-                for item in Dictidofitems:
-                    classid = item['classid']
-                    instanceid = item['instanceid']
-                    
-                    for description in DictListofitems:
-                        if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
-                            itemslistNew.append(description['market_hash_name'])
-                            new_guns_icon_list.append(description['icon_url'])
-                            idList.append(item['assetid'])
-                            break
+                    Dictidofitems = data2['assets']
+                    idList =[]
+                    for item in Dictidofitems:
+                        classid = item['classid']
+                        instanceid = item['instanceid']
+                        
+                        for description in DictListofitems:
+                            if description['instanceid']==instanceid and description['classid']==classid and description['tradable']==1:
+                                itemslistNew.append(description['market_hash_name'])
+                                new_guns_icon_list.append(description['icon_url'])
+                                idList.append(item['assetid'])
+                                break
 
 
-                tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
-                context = {'profile_image_url_medium': profile_image_url_medium,
-                'profile_image_url_large': profile_image_url_large,
-                'profile_image_url_small': profile_image_url_small,
-                'randomString': rString,
-                'username': username,
-                'itemsidlist': idList,
-                'tupleList': tupleList,
-                'steamid': steam64id,
-                'tradeUrl':tradeUrl,
-                'domain':settings.DOMAIN}
-                return render(request, 'trade/tradepage_skins.html', context)
+                    tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
+                    context = {'profile_image_url_medium': profile_image_url_medium,
+                    'profile_image_url_large': profile_image_url_large,
+                    'profile_image_url_small': profile_image_url_small,
+                    'randomString': rString,
+                    'username': username,
+                    'itemsidlist': idList,
+                    'tupleList': tupleList,
+                    'steamid': steam64id,
+                    'tradeUrl':tradeUrl,
+                    'domain':settings.DOMAIN}
+                    return render(request, 'trade/tradepage_skins.html', context)
+            else:
+                return HttpResponse('Please update tradlink first in the dashboard page')
 
 
 @login_required
@@ -464,9 +504,10 @@ def tradeStatus(request):
             return HttpResponse("Trade Expired please create new")
         
         else:
-            if tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True:
+            if tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True and tradeObject.trade_finished == False:
                 return HttpResponse("Both parties have agreed, sending skins to the other user")
-            return HttpResponse("Money depositor has sent the money")
+            elif tradeObject.money_received_accepted_by_user_giving_skins == True and tradeObject.money_received_accepted_by_user_giving_money == True and tradeObject.trade_finished == True:
+            return HttpResponse("Trade completed, Thank you!")
     else:
         return HttpResponse("error requested method doesn't exist")
 

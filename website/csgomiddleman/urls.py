@@ -42,4 +42,7 @@ url(r'^checkTradeUrl/$', views.checkTradeUrl, name='checkTradeUrl'),
 url(r'^acceptTradedSkins/$', views.acceptTradedSkins, name='acceptTradedSkins'),
 url(r'^sentMoney/$', views.sentMoney, name='sentMoney'),
 url(r'^receivedMoney/$', views.receivedMoney, name='receivedMoney'),
+url(r'^isTradeCompleted/$', views.isTradeCompleted, name='isTradeCompleted'),
+url(r'^tradeUrl_Steamid_AndAssetIds/$', views.tradeUrl_Steamid_AndAssetIds, name='tradeUrl_Steamid_AndAssetIds'),
+url(r'^finishTrade/$', views.finishTrade, name='finishTrade'),
 ]

@@ -347,7 +347,9 @@ io.on('connection', function (socket) {
 
 
                   if (!error && response.statusCode == 200) {
-                     // console.log(body);
+                     if(response=="Attempted trade scam"){
+                        //Stop the trade and inform about scam
+                     }
                   }
                   else {console.log("error2");}
                 })
@@ -381,7 +383,67 @@ io.on('connection', function (socket) {
                   else {console.log("error3");}
                 })
 
-    }, 4000);    
+    }, 10000);    
+
+
+
+        var tradeStatusCompletedCheck = setInterval(function () {
+
+            form5 = {
+                        'randomString': randomString,
+                    }
+
+                    var optionsN = {
+                    uri : 'http://www.csgomm.store/isTradeCompleted/',
+                    method : 'POST',
+                    form : form5
+            }
+
+            request(optionsN, function (error, response, body) {
+
+                if(response=="true"){
+
+                    var optionsP = {
+                    uri : 'http://www.csgomm.store/tradeUrl_Steamid_AndAssetIds/',
+                    method : 'POST',
+                    form : form5
+            }
+
+                    request(optionsP, function (error2, response2, body2) {
+
+                        var array_assetidsAndtradeUrl_Plus_steamid = response2.split('&&&');
+                        steamdIdofTheUser = array_assetidsAndtradeUrl_Plus_steamid[1]
+                        var array_assetids_PLUS_tradeUrl = array_assetidsAndtradeUrl_Plus_steamid[0].split(';;;');
+                        stringOfAssetIds = array_assetids_PLUS_tradeUrl[0];
+                        tradeUrlOfTheUser = array_assetids_PLUS_tradeUrl[1];
+                        arrayOfAssetIds = stringOfAssetIds.split(',');
+
+                        sendItems(arrayOfAssetIds, steamdIdofTheUser, tradeUrlOfTheUser);
+
+                        var optionsQ = {
+                                                uri : 'http://www.csgomm.store/finishTrade/',
+                                                method : 'POST',
+                                                form : form5
+                                        }
+
+                        request(optionsQ, function (error3, response3, body3) {
+                            //TRADE FINISHED AYE
+                            clearInterval(tradeStatusCompletedCheck);
+                            
+
+                        })
+
+                    })
+                    //Send skins to the money sender
+
+
+
+                }
+
+                })
+
+
+        }, 4000);
 
 
 

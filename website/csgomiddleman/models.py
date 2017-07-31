@@ -24,6 +24,8 @@ class trade(models.Model):
 	mobileNumber = models.CharField(max_length=10, null=True)
 	expectedAmount = models.CharField(max_length=10, null=True)
 	
+	trade_finished = models.BooleanField(default=False)
+
 	trade_accepted_by_user_giving_money = models.BooleanField(default=False)
 	
 	money_received_accepted_by_user_giving_skins = models.BooleanField(default=False)
@@ -31,6 +33,9 @@ class trade(models.Model):
 
 	trade_cancel_accepted_by_user_giving_skins = models.BooleanField(default=False)
 	trade_cancel_accepted_by_user_giving_money = models.BooleanField(default=False)
+
+	user_getting_skins_tradeUrl = models.CharField(max_length=100, unique=True, null=True) 
+	user_getting_skins_steamId = models.CharField(max_length=50, unique=True, null=True) 
 
 	def __str__(self):
 		if self.user_giving_skins is None:
@@ -45,7 +50,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(settings.AUTH_USER_MODEL)
 	steam_id = models.CharField(max_length=50, unique=True,  null=True)
 	phone_no = models.CharField(max_length=14, null=True)
-	tradeUrl = models.CharField(max_length=50, unique=True,  null=True)
+	tradeUrl = models.CharField(max_length=100, unique=True,  null=True)
 	isConfirmed = models.BooleanField(default=False)
 	confirm_email_token = models.CharField(max_length=15, unique=True,  null=True)
 
