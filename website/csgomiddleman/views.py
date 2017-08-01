@@ -357,6 +357,7 @@ def trade_page(request, rString):
         response2 = urllib2.urlopen('http://steamcommunity.com/inventory/'+steam64id+'/730/2?l=english&count=5000')
         data2 = json.loads(response2.read().decode('utf-8'))
         DictListofitems = data2['descriptions']
+
         guns_icon_list = []
         itemsToSkipList= []
         itemslistNew = []
@@ -364,6 +365,7 @@ def trade_page(request, rString):
 
         Dictidofitems = data2['assets']
         idList =[]
+        inspectElementList = []
         for item in Dictidofitems:
             classid = item['classid']
             instanceid = item['instanceid']
@@ -373,10 +375,15 @@ def trade_page(request, rString):
                     itemslistNew.append(description['market_hash_name'])
                     new_guns_icon_list.append(description['icon_url'])
                     idList.append(item['assetid'])
+                    if description.get('actions') is None:
+                        inspectElementList.append('#')
+                    else:
+                        for elements in description['actions']:
+                            inspectElementList.append(elements['link'])
                     break
 
 
-        tupleList = list(zip(itemslistNew, idList, new_guns_icon_list))
+        tupleList = list(zip(itemslistNew, idList, new_guns_icon_list, inspectElementList))
         context = {'profile_image_url_medium': profile_image_url_medium,
         'profile_image_url_large': profile_image_url_large,
         'profile_image_url_small': profile_image_url_small,
