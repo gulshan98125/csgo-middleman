@@ -124,7 +124,7 @@ max-height:100%;
 			   <label> <input type="checkbox" name="foo" value="{{item.1}}"/>
 <div style="display:inline-block; font-size: 1vw" class="pointerChange" id="skins_names{{item.1}}">{{item.0}}</div>
    <div class="imageContainer pointerChange"> <img  id="skins_image{{item.1}}" src="http://community.edgecast.steamstatic.com/economy/image/{{item.2}}" /> </div>
-   <div id="skins_inspectElement{{item.1}}" style="display: hidden">{{item.3}}</div>
+   <div id="skins_inspectItems{{item.1}}" style="display: none">{{item.3}}</div>
 
 </label> &nbsp
 			   {% endfor %}
@@ -147,8 +147,8 @@ max-height:100%;
      </div>
 
      <div class="row" style="width: 90%; margin-left: 1.5vw"> 
-     <a style="color:red; font-size: 1.5vw"> When you receive the money, please click on the button below: </a> <br>
-    <button class="btn btn-primary" id="receivedMoney">Yes I recieved the money</button>
+     <a style="color:white; font-size: 1.5vw"> When you receive the money, please click on the button below: </a> <br>
+    <button class="btn btn-success" id="receivedMoney">Yes I recieved the money</button>
      </div>
 		</div>
 	</div>
@@ -246,6 +246,7 @@ function unselectAll() {
        itemsNames = "";
        itemsImages = "";
        itemsNamesWithImages = "";
+       inspectItems = "";
 			 $('#inventorylist :checked').each(function(){
 		        allVals.push($(this).val());
 		    });
@@ -254,14 +255,15 @@ function unselectAll() {
        for(i=0;i<allVals.length-1;i++){
         itemsNames += $('#skins_names'+allVals[i]).text() +";";
         itemsImages += $('#skins_image'+allVals[i]).attr("src") +";";
+        inspectItems += $('#inspectItems'+allVals[i]).text() +"&&&";
        }
 
+       inspectItems += $('#inspectItems'+allVals[allVals.length-1]).text();
        itemsNames += $('#skins_names'+allVals[allVals.length-1]).text();
        itemsImages += $('#skins_image'+allVals[allVals.length-1]).attr("src");
        itemsNamesWithImages = itemsNames +"$$$" +itemsImages + "&&&"+ $('#randomString').val();
+       inspectItemsPLUSrandomString = inspectItems + "$$$" + $('#randomString').val();
         
-       console.log("items names:" + itemsNames);
-       console.log("items images:" + itemsImages);
 
        if(allVals.length>0) {
             var msg = $('#tradeUrl').val()+ ","+$('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
@@ -272,6 +274,9 @@ function unselectAll() {
 
 		socket.emit('send_namesAndImages', itemsNamesWithImages, function(data){
                 console.log(data);
+           });
+    socket.emit('send_inspectItemsAndRandomString', inspectItemsPLUSrandomString, function(data){
+                //do nothing
            });
 
 

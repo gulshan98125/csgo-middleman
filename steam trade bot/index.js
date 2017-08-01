@@ -159,6 +159,34 @@ io.use(function(socket,accept){
 io.on('connection', function (socket) {
     console.log('\ngot a new connection from: ' + socket.id + '\n');
 
+
+    socket.on('send_inspectItemsAndRandomString', function (message) { 
+
+        array_with_inspectItems_PLUS_randomString = message.split('$$$');
+        randomString = array_with_inspectItems_PLUS_randomString[1];
+        inspectItems = array_with_inspectItems_PLUS_randomString[0];
+
+        if(array_with_inspectItems_PLUS_randomString.length >1){
+
+            form = {
+                                            'inspectLinks': inspectItems,
+                                            'randomString':randomString,
+                                        }
+
+            var options = {
+                uri : 'http://www.csgomm.store/submitInspectLinks/',
+                method : 'POST',
+                form : form
+            }
+
+            request(options, function (error, response, body) {
+                // inspect links submitted
+            })
+        }
+
+        });
+
+
     socket.on('send_namesAndImages', function (message) { 
 
     // when skins names are send then send post message to django
@@ -400,7 +428,6 @@ io.on('connection', function (socket) {
             }
 
             request(optionsN, function (errorN, responseN, bodyN) {
-		console.log("checking whether trade is accepted by both");
 		
                 if(bodyN=="true"){
 		console.log("trade is accepted by both parties");		

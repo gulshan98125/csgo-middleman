@@ -123,6 +123,17 @@ def updateTradeCreatedTime(request):
     else:
         return HttpResponse("error requested method doesn't exist")
 
+@csrf_exempt
+def submitInspectLinks(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        inspectLinks = request.POST.get('inspectLinks')
+        tradeObject.skins_submitted_inspectLinks = inspectLinks
+        tradeObject.save()
+        return HttpResponse("success")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
 @login_required
 def faq(request):
     return render(request, 'questions/faq.html')

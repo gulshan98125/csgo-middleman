@@ -15,6 +15,8 @@ class trade(models.Model):
 	skins_submitted_icons = models.TextField(null=True)
 	#names of skins
 	skins_submitted_name = models.TextField(null=True)
+	#inspect links of the skins
+	skins_submitted_inspectLinks = models.TextField(null=True)
 	#money submitted is the amount of money submitted
 	trade_reverted = models.CharField(max_length=10,null=True)
 	time_posted = models.DateTimeField(auto_now_add=True, blank=True, null=True)
