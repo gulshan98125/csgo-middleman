@@ -255,10 +255,10 @@ function unselectAll() {
        for(i=0;i<allVals.length-1;i++){
         itemsNames += $('#skins_names'+allVals[i]).text() +";";
         itemsImages += $('#skins_image'+allVals[i]).attr("src") +";";
-        inspectItems += $('#inspectItems'+allVals[i]).text() +"&&&";
+        inspectItems += $('#skins_inspectItems'+allVals[i]).text() +"&&&";
        }
 
-       inspectItems += $('#inspectItems'+allVals[allVals.length-1]).text();
+       inspectItems += $('#skins_inspectItems'+allVals[allVals.length-1]).text();
        itemsNames += $('#skins_names'+allVals[allVals.length-1]).text();
        itemsImages += $('#skins_image'+allVals[allVals.length-1]).attr("src");
        itemsNamesWithImages = itemsNames +"$$$" +itemsImages + "&&&"+ $('#randomString').val();
