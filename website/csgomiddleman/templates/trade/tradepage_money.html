@@ -244,17 +244,14 @@ a {
                         skinsImages = result2;
 
                           $.post("{{domain}}/getAmount/", form, function(result3){
-                            amount = result3;
-                          
-                              $.post("{{domain}}/getInspectLinks/", form, function(result4){
-                                inspectLinks = result4;
-                                });
 
-                        skinsNamesArray = skinsNames.split(';');
+
+                            skinsNamesArray = skinsNames.split(';');
                         skinsImagesArray = skinsImages.split(';');
                         inspectLinksArray = inspectLinks.split('&&&');
                         // console.log(skinsNamesArray);
                         // console.log(skinsImagesArray);
+                        console.log("inspectLinks: "+ inspectLinks);
 
                         var numKeys = skinsNamesArray.reduce(function(n, val) {
                                                                       return n + (val.includes("key"));
@@ -274,6 +271,15 @@ a {
                       //open a popup here notifying user about the skins submitted
                       clearInterval(refreshIntervalId2);
                       Replay();
+
+
+                            amount = result3;
+                          
+                              $.post("{{domain}}/getInspectLinks/", form, function(result4){
+                                inspectLinks = result4;
+                                });
+
+                        
 
                             });
                         });
