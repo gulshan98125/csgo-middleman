@@ -291,7 +291,7 @@ def isTradeCompleted(request):
 def parseJson(request):
     if request.method == "POST":
         urlToParse = request.POST.get('linkToParse')
-        response = urllib2.urlopen('https://api.csgofloat.com:1738/?url='+linkToParse)
+        response = urllib2.urlopen('https://api.csgofloat.com:1738/?url='+urlToParse)
         data = json.loads(response.read().decode('utf-8'))
         itemInfo = data['iteminfo']
         float_value = ""
