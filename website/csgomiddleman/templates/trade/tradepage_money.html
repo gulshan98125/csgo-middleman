@@ -267,7 +267,7 @@ a {
                                       '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                                     
                                     for(i=0;i<skinsNamesArray.length;i++){
-                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'">'+  '&nbsp &nbsp <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '</li>'
+                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'">'+  '&nbsp &nbsp <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '<div id="myDiv"> <button id="inspect'+i+'" value="'+inspectLinksArray[i]+'" onClick="parseInspectLink(this.id)">Get float</button> </div>' +'</li>'
                                     }
                                     
                                     modalTextHtmlString += "</ul>";
@@ -336,6 +336,21 @@ a {
 
 
       },3000);
+
+
+function parseInspectLink(clicked_id){
+  var buttonValue = document.getElementById(clicked_id).value; //stores the button value
+  form = {
+            'linkToParse': buttonValue
+        }
+  //process json parsing and store in response
+
+        $.post("{{domain}}/parseJson/", form, function(result){
+            document.getElementById("myDiv").innerHTML = response; 
+        });
+
+    
+}
 
     function Replay() {
       var refreshIntervalId3 = setInterval(function () {

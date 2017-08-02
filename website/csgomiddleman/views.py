@@ -288,6 +288,24 @@ def isTradeCompleted(request):
         return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
+def parseJson(request):
+    if request.method == "POST":
+        urlToParse = request.POST.get('linkToParse')
+        response = urllib2.urlopen('https://api.csgofloat.com:1738/?url='+linkToParse)
+        data = json.loads(response.read().decode('utf-8'))
+        itemInfo = data['iteminfo']
+        float_value = ""
+        nameOfItem = ""
+        categoryOfItem = ""
+        for details in itemInfo:
+            float_value += details['floatvalue']
+            nameOfItem += details['weapon_type']
+            categoryOfItem += details['item_name']
+        return HttpResponse("Float: "+float_value+" , Name=" +nameOfItem+categoryOfItem)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
 def tradeUrl_Steamid_AndAssetIds(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
@@ -425,7 +443,8 @@ def trade_page(request, rString):
             context = {'username':username,'randomString':rString,'domain':settings.DOMAIN,'steamid':steam64id,'tradeUrl':tradeUrl,'profile_image_url_large': profile_image_url_large}
             return render(request, 'trade/tradepage_money.html', context)
         else:
-            return HttpResponse('Please update tradlink first in the dashboard page')
+            html = '<!DOCTYPE html><html><head></head><body> Please update tradelink first in the dashboard page <br> <a href = "'+settings.DOMAIN+'/dashboard/"> Click here to go to dashboard </a> </body></html>'
+            return HttpResponse(html)
     else:
         if createdUser != request.user.username:
             if tradeUrl is not None:
@@ -496,7 +515,8 @@ def trade_page(request, rString):
                     'domain':settings.DOMAIN}
                     return render(request, 'trade/tradepage_skins.html', context)
             else:
-                return HttpResponse('Please update tradlink first in the dashboard page')
+                html = '<!DOCTYPE html><html><head></head><body> Please update tradelink first in the dashboard page <br> <a href = "'+settings.DOMAIN+'/dashboard/"> Click here to go to dashboard </a> </body></html>'
+                return HttpResponse(html)
 
 
 @login_required

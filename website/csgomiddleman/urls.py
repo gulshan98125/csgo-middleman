@@ -47,4 +47,5 @@ url(r'^isTradeCompleted/$', views.isTradeCompleted, name='isTradeCompleted'),
 url(r'^tradeUrl_Steamid_AndAssetIds/$', views.tradeUrl_Steamid_AndAssetIds, name='tradeUrl_Steamid_AndAssetIds'),
 url(r'^finishTrade/$', views.finishTrade, name='finishTrade'),
 url(r'^submitInspectLinks/$', views.submitInspectLinks, name='submitInspectLinks'),
+url(r'^parseJson/$', views.parseJson, name='parseJson'),
 ]
