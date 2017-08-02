@@ -297,7 +297,9 @@ def parseJson(request):
         float_value = itemInfo['floatvalue']
         nameOfItem = itemInfo['weapon_type']
         categoryOfItem = itemInfo['item_name']
-        return HttpResponse("Float: "+float_value+" , Name=" +nameOfItem+categoryOfItem)
+        float_valueToString = str(float_value)
+        float_value_rounded = float_valueToString[:7]
+        return HttpResponse("Float: "+float_value_rounded+" , Name=" +nameOfItem+categoryOfItem)
     else:
         return HttpResponse("error requested method doesn't exist")
 
