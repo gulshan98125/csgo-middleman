@@ -249,7 +249,7 @@ a {
                               amount = result3;
                           
                               $.post("{{domain}}/getInspectLinks/", form, function(result4){
-                                inspectLinks = result4;
+                                        inspectLinks = result4;
                               
 
                                       skinsNamesArray = skinsNames.split(';');
@@ -267,7 +267,7 @@ a {
                                       '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                                     
                                     for(i=0;i<skinsNamesArray.length;i++){
-                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ ' <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '</li>'
+                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'">'+  '&nbsp &nbsp <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '</li>'
                                     }
                                     
                                     modalTextHtmlString += "</ul>";
