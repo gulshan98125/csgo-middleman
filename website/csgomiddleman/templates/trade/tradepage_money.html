@@ -246,37 +246,37 @@ a {
                           $.post("{{domain}}/getAmount/", form, function(result3){
 
 
-                            skinsNamesArray = skinsNames.split(';');
-                        skinsImagesArray = skinsImages.split(';');
-                        inspectLinksArray = inspectLinks.split('&&&');
-                        // console.log(skinsNamesArray);
-                        // console.log(skinsImagesArray);
-                        console.log("inspectLinks: "+ inspectLinks);
-
-                        var numKeys = skinsNamesArray.reduce(function(n, val) {
-                                                                      return n + (val.includes("key"));
-                                                                  }, 0);
-                        var numSkins = skinsNamesArray.length - numKeys;
-
-                        modalTextHtmlString = 
-                        '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
-                      
-                      for(i=0;i<skinsNamesArray.length;i++){
-                        modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ ' <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '</li>'
-                      }
-                      
-                      modalTextHtmlString += "</ul>";
-                      $('#modalText').html(modalTextHtmlString);
-                      modal.style.display = "block";
-                      //open a popup here notifying user about the skins submitted
-                      clearInterval(refreshIntervalId2);
-                      Replay();
-
-
-                            amount = result3;
+                              amount = result3;
                           
                               $.post("{{domain}}/getInspectLinks/", form, function(result4){
                                 inspectLinks = result4;
+                              
+
+                                      skinsNamesArray = skinsNames.split(';');
+                                      skinsImagesArray = skinsImages.split(';');
+                                      inspectLinksArray = inspectLinks.split('&&&');
+                                      // console.log(skinsNamesArray);
+                                      // console.log(skinsImagesArray);
+
+                                      var numKeys = skinsNamesArray.reduce(function(n, val) {
+                                                                                    return n + (val.includes("key"));
+                                                                                }, 0);
+                                      var numSkins = skinsNamesArray.length - numKeys;
+
+                                      modalTextHtmlString = 
+                                      '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
+                                    
+                                    for(i=0;i<skinsNamesArray.length;i++){
+                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'"'+ ' <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '</li>'
+                                    }
+                                    
+                                    modalTextHtmlString += "</ul>";
+                                    $('#modalText').html(modalTextHtmlString);
+                                    modal.style.display = "block";
+                                    //open a popup here notifying user about the skins submitted
+                                    clearInterval(refreshIntervalId2);
+                                    Replay();
+
                                 });
 
                         
