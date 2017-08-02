@@ -538,6 +538,7 @@ def getSkinsNames(request):
         return HttpResponse(tradeObject.skins_submitted_name)
     else:
         return HttpResponse("error requested method doesn't exist")
+
 @csrf_exempt
 def getSkinsUrls(request):
     if request.method == "POST":
@@ -551,6 +552,14 @@ def getAmount(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
         return HttpResponse(tradeObject.expectedAmount)
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@csrf_exempt
+def getInspectLinks(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        return HttpResponse(tradeObject.skins_submitted_inspectLinks)
     else:
         return HttpResponse("error requested method doesn't exist")
 
