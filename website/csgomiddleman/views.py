@@ -294,13 +294,9 @@ def parseJson(request):
         response = urllib2.urlopen('https://api.csgofloat.com:1738/?url='+urlToParse)
         data = json.loads(response.read().decode('utf-8'))
         itemInfo = data['iteminfo']
-        float_value = ""
-        nameOfItem = ""
-        categoryOfItem = ""
-        for details in itemInfo:
-            float_value += details['floatvalue']
-            nameOfItem += details['weapon_type']
-            categoryOfItem += details['item_name']
+        float_value = itemInfo['floatvalue']
+        nameOfItem = itemInfo['weapon_type']
+        categoryOfItem = itemInfo['item_name']
         return HttpResponse("Float: "+float_value+" , Name=" +nameOfItem+categoryOfItem)
     else:
         return HttpResponse("error requested method doesn't exist")
