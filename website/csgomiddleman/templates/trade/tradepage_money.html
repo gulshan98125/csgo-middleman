@@ -163,6 +163,21 @@ a {
 	$(document).ready(function(){
     var modal = document.getElementById('myModal');
     
+
+
+  function parseInspectLink(clicked_id){
+  var buttonValue = document.getElementById(clicked_id).value; //stores the button value
+  form = {
+            'linkToParse': buttonValue
+        }
+  //process json parsing and store in response
+
+        $.post("{{domain}}/parseJson/", form, function(result){
+            document.getElementById("myDiv").innerHTML = response; 
+        });
+
+    
+}  
    
 	$('#accept').click(function(){
 
@@ -338,19 +353,7 @@ a {
       },3000);
 
 
-function parseInspectLink(clicked_id){
-  var buttonValue = document.getElementById(clicked_id).value; //stores the button value
-  form = {
-            'linkToParse': buttonValue
-        }
-  //process json parsing and store in response
 
-        $.post("{{domain}}/parseJson/", form, function(result){
-            document.getElementById("myDiv").innerHTML = response; 
-        });
-
-    
-}
 
     function Replay() {
       var refreshIntervalId3 = setInterval(function () {
