@@ -81,21 +81,38 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
         var url = item.getImageURL() + "128x128";
         skinsImageUrls += url + ";";
         skinsNames += item.market_hash_name +";";
-        stringToAdd = item.actions[0].link;
-        modifiedString = stringToAdd.replace("%owner_steamid%",partner)
-        modifiedString2 = modifiedString.replace("%assetid%",item.assetid)
+        if(typeof item.actions != 'undefined'){
+        	stringToAdd = item.actions[0].link;
+        	modifiedString = stringToAdd.replace("%owner_steamid%",partner)
+        	modifiedString2 = modifiedString.replace("%assetid%",item.assetid)
+        	inspectLinks += modifiedString2 + "&&&";
+        }
+        	else {
+        		stringToAdd = "#";
+        		inspectLinks += stringToAdd;
 
-        inspectLinks += modifiedString2 + "&&&";
+        }
+        
+
+        
 
     }
     var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
     var url = item.getImageURL() + "128x128";
     skinsImageUrls += url;
     skinsNames = item.market_hash_name;
-    stringToAdd2 = item.actions[0].link;
-    modifiedString3 = stringToAdd2.replace("%owner_steamid%",partner)
-    modifiedString4 = modifiedString3.replace("%assetid%",item.assetid)
-    inspectLinks += modifiedString4
+    if(typeof item.actions != 'undefined'){
+    	stringToAdd2 = item.actions[0].link;
+	    modifiedString3 = stringToAdd2.replace("%owner_steamid%",partner)
+	    modifiedString4 = modifiedString3.replace("%assetid%",item.assetid)
+	    inspectLinks += modifiedString4;
+    }
+    	else{
+    		stringToAdd2 = "#";
+    		inspectLinks += stringToAdd2;
+    	}
+    
+    
 
 
 	form = {
