@@ -82,6 +82,8 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
         skinsImageUrls += url + ";";
         skinsNames += item.market_hash_name +";";
         inspectLinks += item.actions[0].link + "&&&";
+        inspectLinks.replace("%owner_steamid%",partner, 1)
+        inspectLinks.replace("%assetid%",item.assetid,1)
 
     }
     var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
@@ -89,6 +91,8 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
     skinsImageUrls += url;
     skinsNames = item.market_hash_name;
     inspectLinks += item.actions[0].link;
+    inspectLinks.replace("%owner_steamid%",partner, 1)
+    inspectLinks.replace("%assetid%",item.assetid,1)
 
 
 	form = {
