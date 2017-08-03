@@ -243,19 +243,10 @@ function unselectAll() {
 
       $('#depositButton').click(function(){
 			 var allVals = [];
-       inspectItems = "";
 			 $('#inventorylist :checked').each(function(){
 		        allVals.push($(this).val());
 		    });
-
-
-       for(i=0;i<allVals.length-1;i++){
-        inspectItems += $('#skins_inspectItems'+allVals[i]).text() +"&&&";
-       }
-
-       inspectItems += $('#skins_inspectItems'+allVals[allVals.length-1]).text();
-       inspectItemsPLUSrandomString = inspectItems + "$$$" + $('#randomString').val();
-        
+ 
 
        if(allVals.length>0) {
             var msg = $('#tradeUrl').val()+ ","+$('#randomString').val() + "," +$('#steamid').val() + "," + allVals+"";
@@ -263,11 +254,6 @@ function unselectAll() {
        else {
           var msg = $('#tradeUrl').val()+ "," + $('#randomString').val() + "," + $('#steamid').val();
        }
-
-    socket.emit('send_inspectItemsAndRandomString', inspectItemsPLUSrandomString, function(data){
-                //do nothing
-           });
-
 
 		if(msg){
 	

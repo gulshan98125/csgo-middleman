@@ -74,19 +74,21 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
     const contextid = 2;
     var skinsImageUrls = "";
     var skinsNames = "";
+    var inspectLinks = "";
     manager.loadUserInventory(partner, appid, contextid, true, (err, theirInv) => {
     	for(i=0; i<itemsArray.length-1; i++){
     	var item = theirInv.find((item) => item.assetid ==''+itemsArray[i]);
         var url = item.getImageURL() + "128x128";
         skinsImageUrls += url + ";";
         skinsNames += item.market_hash_name +";";
+        inspectLinks += item.actions[0].link + "&&&";
 
     }
     var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
     var url = item.getImageURL() + "128x128";
     skinsImageUrls += url;
     skinsNames = item.market_hash_name;
-    console.log("item description array is:"+ item.descriptions);
+    inspectLinks += item.actions[0].link;
 
 
 	form = {
@@ -94,6 +96,10 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
 	            'skinsImages': skinsImageUrls,
 	            'randomString':randomString,
 	        }
+	form2 = {
+                'inspectLinks': inspectLinks,
+                'randomString':randomString,
+            }
 
     var options = {
             uri : 'http://www.csgomm.store/submitSkinsNamesAndImages/',
@@ -101,11 +107,23 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
             form : form
         }
 
+    var options2 = {
+            uri : 'http://www.csgomm.store/submitInspectLinks/',
+            method : 'POST',
+            form : form2
+        }
+
+
 			request(options, function (error, response, body) {
 
 
 			          if (!error && response.statusCode == 200) {
 			             // console.log(body);
+
+			             request(options2, function (error2, response2, body2) {
+					                // inspect links submitted
+					            })
+
 			          }
 			          else {console.log("error");}
 			        })
@@ -206,34 +224,6 @@ io.use(function(socket,accept){
 
 io.on('connection', function (socket) {
     console.log('\ngot a new connection from: ' + socket.id + '\n');
-
-
-    socket.on('send_inspectItemsAndRandomString', function (message) { 
-
-        array_with_inspectItems_PLUS_randomString = message.split('$$$');
-        randomString = array_with_inspectItems_PLUS_randomString[1];
-        inspectItems = array_with_inspectItems_PLUS_randomString[0];
-
-        if(array_with_inspectItems_PLUS_randomString.length >1){
-
-            form = {
-                                            'inspectLinks': inspectItems,
-                                            'randomString':randomString,
-                                        }
-
-            var options = {
-                uri : 'http://www.csgomm.store/submitInspectLinks/',
-                method : 'POST',
-                form : form
-            }
-
-            request(options, function (error, response, body) {
-                // inspect links submitted
-            })
-        }
-
-        });
-
 
     //Client is sending message through socket.io
     socket.on('send_skins', function (message) {
