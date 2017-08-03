@@ -68,6 +68,30 @@ function sendItems(itemsArray, partnerid, tradeUrl) {
 
 
 
+function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl) {
+	const partner = partnerid;
+    const appid = 730;
+    const contextid = 2;
+    var skinsImageUrls = "";
+    var skinsNames = "";
+    manager.loadUserInventory(partner, appid, contextid, true, (err, theirInv) => {
+    	for(i=0; i<itemsArray.length-1; i++){
+    	var item = theirInv.find((item) => item.assetid ==''+itemsArray[i]);
+        var url = item.getImageURL() + "128x128";
+        skinsImageUrls += url + ";";
+        skinsNames += item.market_hash_name +";";
+
+    }
+    var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
+    var url = item.getImageURL() + "128x128";
+    skinsImageUrls += url;
+    skinsNames = market_hash_name;
+    console.log("skinsImageUrls is :" +skinsImageUrls);
+    console.log("skinsNames is :" + skinsNames);
+    });
+}
+
+
 
 
 function depositItem(itemsArray, partnerid, tradeUrl) {
@@ -250,6 +274,7 @@ io.on('connection', function (socket) {
         const partnerid = itemsId_WithSteamId_and_RandomString[2]+'';
         const randomString = itemsId_WithSteamId_and_RandomString[1]+'';
             depositItem(itemsOnlyArray, partnerid, tradeUrl);
+            depositSkinsUrlAndNames(itemsOnlyArray, partnerid, tradeUrl);
             var refreshIntervalId = setInterval(function () {
                                 manager.getOffer(ActiveTradeOffersMap[parseInt(partnerid)],(err,body) =>{
                                 if (err) {
