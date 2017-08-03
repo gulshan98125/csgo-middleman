@@ -159,25 +159,29 @@ a {
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script>
 	
-	// SOCKET SENDING
-	$(document).ready(function(){
-    var modal = document.getElementById('myModal');
-    
 
-
-  function parseInspectLink(clicked_id){
+function parseInspectLink(clicked_id){
+  document.getElementById("myDiv"+clicked_id).innerHTML = "wait...";
   var buttonValue = document.getElementById(clicked_id+"").value; //stores the button value
+  
   form = {
             'linkToParse': buttonValue
         }
   //process json parsing and store in response
 
         $.post("{{domain}}/parseJson/", form, function(result){
-            document.getElementById("myDiv"+clicked_id).innerHTML = response; 
+            document.getElementById("myDiv"+clicked_id).innerHTML = result; 
         });
 
     
-}  
+} 
+
+
+
+  
+	// SOCKET SENDING
+	$(document).ready(function(){
+    var modal = document.getElementById('myModal');  
    
 	$('#accept').click(function(){
 

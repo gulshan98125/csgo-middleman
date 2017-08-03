@@ -88,7 +88,7 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
         	inspectLinks += modifiedString2 + "&&&";
         }
         	else {
-        		stringToAdd = "#";
+        		stringToAdd = "#&&&";
         		inspectLinks += stringToAdd;
 
         }
