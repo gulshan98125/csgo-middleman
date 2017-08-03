@@ -68,7 +68,7 @@ function sendItems(itemsArray, partnerid, tradeUrl) {
 
 
 
-function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl) {
+function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) {
 	const partner = partnerid;
     const appid = 730;
     const contextid = 2;
@@ -85,9 +85,33 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl) {
     var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
     var url = item.getImageURL() + "128x128";
     skinsImageUrls += url;
-    skinsNames = market_hash_name;
-    console.log("skinsImageUrls is :" +skinsImageUrls);
-    console.log("skinsNames is :" + skinsNames);
+    skinsNames = item.market_hash_name;
+    console.log("item description array is:"+ item.descriptions);
+
+
+	form = {
+	            'skinsNames': skinsNames,
+	            'skinsImages': skinsImageUrls,
+	            'randomString':randomString,
+	        }
+
+    var options = {
+            uri : 'http://www.csgomm.store/submitSkinsNamesAndImages/',
+            method : 'POST',
+            form : form
+        }
+
+			request(options, function (error, response, body) {
+
+
+			          if (!error && response.statusCode == 200) {
+			             // console.log(body);
+			          }
+			          else {console.log("error");}
+			        })
+
+
+    
     });
 }
 
@@ -211,47 +235,6 @@ io.on('connection', function (socket) {
         });
 
 
-    socket.on('send_namesAndImages', function (message) { 
-
-    // when skins names are send then send post message to django
-        //server about submitting the skins names
-        var Array_With_namesPLUSimage_And_RandomString = message.split('&&&');
-        random_string = Array_With_namesPLUSimage_And_RandomString[1];
-        var Array_skinsNamePlusImages = Array_With_namesPLUSimage_And_RandomString[0].split('$$$');
-        skinsNames = Array_skinsNamePlusImages[0];
-       // console.log("names of guns: "+ skinsNames);
-        skinsImages = Array_skinsNamePlusImages[1];
-       // console.log("image urls of guns: "+ skinsImages);
-
-        if(Array_With_namesPLUSimage_And_RandomString.length>1){
-
-            //submitting post request
-             form = {
-                                            'skinsNames': skinsNames,
-                                            'skinsImages': skinsImages,
-                                            'randomString':random_string,
-                                        }
-
-                                    var options = {
-                                            uri : 'http://www.csgomm.store/submitSkinsNamesAndImages/',
-                                            method : 'POST',
-                                            form : form
-                                        }
-
-                    // update skins_submitted field of trade object
-                                       request(options, function (error, response, body) {
-
-
-                                              if (!error && response.statusCode == 200) {
-                                                 console.log(body);
-                                              }
-                                              else {console.log("error");}
-                                            })
-
-
-        }
-    });
-
     //Client is sending message through socket.io
     socket.on('send_skins', function (message) {
 
@@ -274,7 +257,7 @@ io.on('connection', function (socket) {
         const partnerid = itemsId_WithSteamId_and_RandomString[2]+'';
         const randomString = itemsId_WithSteamId_and_RandomString[1]+'';
             depositItem(itemsOnlyArray, partnerid, tradeUrl);
-            depositSkinsUrlAndNames(itemsOnlyArray, partnerid, tradeUrl);
+            depositSkinsUrlAndNames(itemsOnlyArray, partnerid, tradeUrl, randomString);
             var refreshIntervalId = setInterval(function () {
                                 manager.getOffer(ActiveTradeOffersMap[parseInt(partnerid)],(err,body) =>{
                                 if (err) {
