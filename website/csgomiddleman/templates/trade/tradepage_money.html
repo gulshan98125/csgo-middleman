@@ -130,7 +130,12 @@ a {
   After you have sent the paytm click on this button: <button class="btn btn-success" id = "sentMoney"> I have sent the paytm </button>
 
   </div>	
-
+  <br>
+  <br>
+  <br>
+  <div class="text-center">
+    <button class="btn btn-danger" id="cancelTrade">Cancel trade</button>
+  </div>
 		</div>
 	</div>
 <div class="row text-center" style="height:3vh; background-color: black; font-size:1vw; color:white">
@@ -161,9 +166,8 @@ a {
 	
 
 function parseInspectLink(clicked_id){
-  document.getElementById("myDiv"+clicked_id).innerHTML = "wait...";
   var buttonValue = document.getElementById(clicked_id+"").value; //stores the button value
-  
+  document.getElementById("myDiv"+clicked_id).innerHTML = "wait...";
   form = {
             'linkToParse': buttonValue
         }
@@ -178,7 +182,7 @@ function parseInspectLink(clicked_id){
 
 
 
-  
+
 	// SOCKET SENDING
 	$(document).ready(function(){
     var modal = document.getElementById('myModal');  
@@ -205,6 +209,21 @@ function parseInspectLink(clicked_id){
 
       			
     		});
+
+
+  $('#cancelTrade').click(function(){
+        form = {
+            'randomString': $('#randomString').val(),
+        }
+             $.post("{{domain}}/cancelTrade/", form, function(result){
+                  
+                  if(result!="error in changing tradeCancel"){
+                     alert(result);
+                  
+                  }
+              });
+
+      });
 
 
   $('#sentMoney').click(function(){
@@ -286,7 +305,7 @@ function parseInspectLink(clicked_id){
                                       '<br><div style="color: red; font-weight:bold"> expected money ='+ Math.round(Number(amount)) +' </div> <br> <div style="font-size:3vw" class="text-center"> Submitted Items </div> <br> <div style="font-size:2vw">keys ='+numKeys+ ', skins/items ='+numSkins+'</div><br><ul>';
                                     
                                     for(i=0;i<skinsNamesArray.length;i++){
-                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'">'+  '&nbsp &nbsp <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '<div id="myDivinspect'+i+'"> <button id="inspect'+i+'" value="'+inspectLinksArray[i]+'" onClick="parseInspectLink(this.id)">Get float</button> </div>' +'</li>'
+                                      modalTextHtmlString += '<li>' + skinsNamesArray[i] + '<img style="width: 7vw;height: 10vh" src="'+skinsImagesArray[i]+'">'+  '&nbsp &nbsp <a href="'+inspectLinksArray[i]+'">Inspect Link</a>'+ '&nbsp &nbsp <div id="myDivinspect'+i+'" style="display:inline-block"> <button id="inspect'+i+'" value="'+inspectLinksArray[i]+'" onClick="parseInspectLink(this.id)">Get float</button> </div>' +'</li>'
                                     }
                                     
                                     modalTextHtmlString += "</ul>";

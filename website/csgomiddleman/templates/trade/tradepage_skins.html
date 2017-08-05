@@ -150,6 +150,10 @@ max-height:100%;
      <a style="color:white; font-size: 1.5vw"> When you receive the money, please click on the button below: </a> <br>
     <button class="btn btn-success" id="receivedMoney">Yes I recieved the money</button>
      </div>
+     <div class="row" style="width: 90%; margin-left: 1.5vw"> 
+     <button class="btn btn-danger" id="cancelTrade">Cancel trade</button>
+     </div>
+
 		</div>
 	</div>
 
@@ -235,7 +239,21 @@ function unselectAll() {
                   if(result!="error"){
                      alert(result);
                   
-                    clearInterval(refreshIntervalId);
+                  }
+              });
+
+      });
+
+
+      $('#cancelTrade').click(function(){
+        form = {
+            'randomString': $('#randomString').val(),
+        }
+             $.post("{{domain}}/cancelTrade/", form, function(result){
+                  
+                  if(result!="error in changing tradeCancel"){
+                     alert(result);
+                  
                   }
               });
 

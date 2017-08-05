@@ -39,7 +39,7 @@ client.on('loggedOn', () => {
     client.setPersona(SteamUser.Steam.EPersonaState.Online);
 });
 
-function sendItems(itemsArray, partnerid, tradeUrl) {
+function sendItems(itemsArray, partnerid, tradeUrl, randomString) {
     console.log("sending items back");
     manager.loadInventory(730, 2, true, (err, inventory) => {
         if (err) {
@@ -54,7 +54,7 @@ function sendItems(itemsArray, partnerid, tradeUrl) {
                     
                     }
 
-            offer.setMessage(`you got items back :)`);
+            offer.setMessage("trade id: "+randomString);
             offer.send((err, status) => {
                 if (err) {
                     console.log(err);
@@ -100,7 +100,7 @@ function depositSkinsUrlAndNames(itemsArray, partnerid, tradeUrl, randomString) 
     var item = theirInv.find((item) => item.assetid ==''+itemsArray[itemsArray.length-1]);
     var url = item.getImageURL() + "128x128";
     skinsImageUrls += url;
-    skinsNames = item.market_hash_name;
+    skinsNames += item.market_hash_name;
     if(typeof item.actions != 'undefined'){
     	stringToAdd2 = item.actions[0].link;
 	    modifiedString3 = stringToAdd2.replace("%owner_steamid%",partner)
@@ -421,7 +421,7 @@ io.on('connection', function (socket) {
                      else if(body != "false"){
                         //SEND BACK TRADE OFFER HERE RECEIVED BODY IS string of assetids
                         var Array_of_assetids_received = body.split(',');
-                        sendItems(Array_of_assetids_received, partnerid, tradeUrl);
+                        sendItems(Array_of_assetids_received, partnerid, tradeUrl, randomString);
                         //END THE INTERVAL
                         clearInterval(tradeRevertedUpdate_and_check);
                         // NOTIFY USER THROUGH SOCKET
@@ -517,7 +517,9 @@ io.on('connection', function (socket) {
                                                 msg = "";
                                                 clearInterval(refreshIntervalId);
                                             }
-                                            else {console.log("waiting for offer accept");}
+                                            else {// waiting for offer accept
+
+                                            }
                                             
                                         }  
                                         });                                                    

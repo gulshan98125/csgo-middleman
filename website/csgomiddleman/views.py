@@ -291,6 +291,8 @@ def isTradeCompleted(request):
 def parseJson(request):
     if request.method == "POST":
         urlToParse = request.POST.get('linkToParse')
+        if urlToParse == "#":
+            return HttpResponse("This weapon type doesn't have a float value")
         response = urllib2.urlopen('https://api.csgofloat.com:1738/?url='+urlToParse)
         data = json.loads(response.read().decode('utf-8'))
         itemInfo = data['iteminfo']
@@ -340,6 +342,22 @@ def submitNumberAndMoney(request):
             return HttpResponse("error")
     else:
         return HttpResponse("error requested method doesn't exist")
+
+@login_required
+@csrf_exempt
+def cancelTrade(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_skins == request.user:
+            tradeObject.trade_cancel_accepted_by_user_giving_skins = True
+            tradeObject.save()
+            return HttpResponse("Trade cancelled from your side")
+        elif tradeObject.user_giving_money == request.user:
+            tradeObject.trade_cancel_accepted_by_user_giving_money = True
+            tradeObject.save()
+            return HttpResponse("Trade cancelled from your side")
+        else:
+            return HttpResponse("error in changing tradeCancel")
 
 @csrf_exempt
 def updateTradeReverted(request):
