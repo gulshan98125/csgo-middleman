@@ -399,7 +399,28 @@ io.on('connection', function (socket) {
                   if (!error && response.statusCode == 200) {
                      if(body=="Attempted trade scam"){
                         //Stop the trade and inform about scam
+                        socket.emit('message', "One of you tried scamming, items are stored in the bot and informed to the admin", function(data){
+                                                                console.log(data);
+                                                           });
+                        clearInterval(tradeRevertedUpdate_and_check);
+                     	clearInterval(tradeStatusCompletedCheck);
                      }
+                     else if(body=="store items in the bot"){
+                     	//inform skins submitter and clear the intervals
+                     	socket.emit('message', "One of you didn't cancel the trade so the items are stored in the bot and informed to the admin", function(data){
+                                                                console.log(data);
+                                                           });
+                     	clearInterval(tradeRevertedUpdate_and_check);
+                     	clearInterval(tradeStatusCompletedCheck);
+
+                     }
+
+                     else if(body=="Skins depositor didn't recieve money while submitter sent. Trade forwarded to admin"){
+                     	//store skins in the bot and exit the intervals
+                     	clearInterval(tradeRevertedUpdate_and_check);
+                     	clearInterval(tradeStatusCompletedCheck);
+                     }
+
                   }
                   else {console.log("error2");}
                 })

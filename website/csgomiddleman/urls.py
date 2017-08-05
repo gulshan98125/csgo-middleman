@@ -49,4 +49,5 @@ url(r'^finishTrade/$', views.finishTrade, name='finishTrade'),
 url(r'^submitInspectLinks/$', views.submitInspectLinks, name='submitInspectLinks'),
 url(r'^parseJson/$', views.parseJson, name='parseJson'),
 url(r'^cancelTrade/$', views.cancelTrade, name='cancelTrade'),
+url(r'^rejectTrade/$', views.rejectTrade, name='rejectTrade'),
 ]

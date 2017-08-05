@@ -29,6 +29,7 @@ class trade(models.Model):
 	trade_finished = models.BooleanField(default=False)
 
 	trade_accepted_by_user_giving_money = models.BooleanField(default=False)
+	trade_rejected_by_user_giving_money = models.BooleanField(default=False)
 	
 	money_received_accepted_by_user_giving_skins = models.BooleanField(default=False)
 	money_received_accepted_by_user_giving_money = models.BooleanField(default=False)

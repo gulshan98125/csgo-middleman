@@ -133,7 +133,7 @@ a {
   <br>
   <br>
   <br>
-  <div class="text-center">
+  <div class="text-center" id="cancelTradeDiv">
     <button class="btn btn-danger" id="cancelTrade">Cancel trade</button>
   </div>
 		</div>
@@ -218,6 +218,7 @@ function parseInspectLink(clicked_id){
              $.post("{{domain}}/cancelTrade/", form, function(result){
                   
                   if(result!="error in changing tradeCancel"){
+                     document.getElementById("cancelTradeDiv").innerHTML = "trade cancellation request sent";
                      alert(result);
                   
                   }
@@ -244,7 +245,19 @@ function parseInspectLink(clicked_id){
 
 
 	$('#reject').click(function(){
-      		$('#myModal').hide();
+      	 form = {
+            'randomString': $('#randomString').val()
+        }
+               $.post("{{domain}}/rejectTrade/", form, function(result){
+                  
+                  if(result!="error! invalid user"){
+                    alert(result);
+                    
+                  }
+              });
+
+        	$('#myModal').hide();
+
 	    });
 
     var refreshIntervalId = setInterval(function () {

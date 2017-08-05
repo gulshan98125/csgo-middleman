@@ -358,6 +358,22 @@ def cancelTrade(request):
             return HttpResponse("Trade cancelled from your side")
         else:
             return HttpResponse("error in changing tradeCancel")
+    else:
+        return HttpResponse("error requested method doesn't exist")
+
+@login_required
+@csrf_exempt
+def rejectTrade(request):
+    if request.method == "POST":
+        tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
+        if tradeObject.user_giving_money == request.user:
+            tradeObject.trade_rejected_by_user_giving_money = True
+            tradeObject.save()
+            return HttpResponse("Trade is successfully rejected by you")
+        else:
+            return HttpResponse("error! invalid user")
+    else:
+        return HttpResponse("error requested method doesn't exist")
 
 @csrf_exempt
 def updateTradeReverted(request):
@@ -366,15 +382,34 @@ def updateTradeReverted(request):
         postedTime = tradeObject.time_posted
         timediff = datetime.datetime.utcnow().replace(tzinfo=utc) - postedTime
         timediff_inSeconds = timediff.total_seconds()
-        if timediff_inSeconds > 1200 and tradeObject.money_submitted=="false":
-            tradeObject.trade_reverted = "true"
-            tradeObject.skins_submitted = "0"
-            tradeObject.save()
-            return HttpResponse("success trade_reverted changed")
+        if tradeObject.trade_cancel_accepted_by_user_giving_skins == True and tradeObject.trade_cancel_accepted_by_user_giving_money == True:
+            return HttpResponse ("Trade Cancelled sending items back")
+        elif timediff_inSeconds > 1200 and tradeObject.money_submitted=="false":
+            if tradeObject.trade_cancel_accepted_by_user_giving_skins == False and tradeObject.trade_cancel_accepted_by_user_giving_money == True:
+                #no change made to trade reverted
+                return HttpResponse("store items in the bot")
+            elif tradeObject.trade_cancel_accepted_by_user_giving_skins == True and tradeObject.trade_cancel_accepted_by_user_giving_money == False:
+                #no change made to trade reverted
+                return HttpResponse("store items in the bot")
+            else tradeObject.trade_cancel_accepted_by_user_giving_skins == False and tradeObject.trade_cancel_accepted_by_user_giving_money == False:
+                if tradeObject.money_received_accepted_by_user_giving_money == True:
+                    #no change made to trade reverted
+                    return HttpResponse("Skins depositor didn't recieve money while submitter sent. Trade forwarded to admin")
+                else:
+                    tradeObject.trade_reverted = "true"
+                    tradeObject.skins_submitted = "0"
+                    tradeObject.save()
+                    return HttpResponse("success trade_reverted changed")
         elif timediff_inSeconds > 1200 and tradeObject.money_received_accepted_by_user_giving_skins==False:
             return HttpResponse("Attempted trade scam")
         else:
-            return HttpResponse("no change made to trade_reverted")
+            if tradeObject.trade_cancel_accepted_by_user_giving_skins == True and tradeObject.trade_cancel_accepted_by_user_giving_money == True:
+                tradeObject.trade_reverted = "true"
+                tradeObject.skins_submitted = "0"
+                tradeObject.save()
+                return HttpResponse("success trade_reverted changed")
+            else:
+                return HttpResponse("no change made to trade_reverted")
     else:
         return HttpResponse("error requested method doesn't exist")
 
@@ -543,7 +578,15 @@ def Login(request):
 def tradeStatus(request):
     if request.method == "POST":
         tradeObject = trade.objects.get(random_string=request.POST.get('randomString'))
-        if tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "false":
+        if tradeObject.trade_cancel_accepted_by_user_giving_skins == True and tradeObject.trade_cancel_accepted_by_user_giving_money == False:
+            return HttpResponse("Trade cancelled by skins depositor, waiting for cancellation from money depositor")
+        elif tradeObject.trade_cancel_accepted_by_user_giving_skins == False and tradeObject.trade_cancel_accepted_by_user_giving_money == True:
+            return HttpResponse("Trade cancelled by Money depositor, waiting for cancellation from skins depositor")
+
+        elif tradeObject.trade_cancel_accepted_by_user_giving_skins == True and tradeObject.trade_cancel_accepted_by_user_giving_money == True:
+            return HttpResponse("Trade Cancelled please create new")
+
+        elif tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "false":
             return HttpResponse("waiting for skins/keys")
         
         elif tradeObject.skins_submitted == "false" and tradeObject.money_submitted == "true":
@@ -551,7 +594,9 @@ def tradeStatus(request):
         
         elif tradeObject.skins_submitted == "true" and tradeObject.money_submitted == "false":
             if tradeObject.trade_accepted_by_user_giving_money == True:
-                return HttpResponse("user accepted submitted skins, waiting for his money sending")
+                return HttpResponse("Money sender accepted submitted skins, waiting for his money sending")
+            elif tradeObject.trade_rejected_by_user_giving_money == True:
+                return HttpResponse("Money sender rejected skins. Sending skins back to depositor")
             else:
                 return HttpResponse("Skins submitted waiting for money")
         
